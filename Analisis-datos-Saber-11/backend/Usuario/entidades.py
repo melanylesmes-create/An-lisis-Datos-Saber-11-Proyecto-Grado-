@@ -54,3 +54,6 @@ class Funcionario(Usuario):
             contrasena,
             "Funcionario"
         )
+
+
+from .entidades import Funcionario
