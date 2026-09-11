@@ -1,0 +1,630 @@
+/* =========================================
+   CONFIGURACIÓN GENERAL
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* =========================================
+   BARRA SUPERIOR GOV.CO
+========================================= */
+
+.gov-bar {
+    height: 32px;
+    background-color: #3366cc;
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+}
+
+.gov-bar span {
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.header {
+    height: 82px;
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7%;
+
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* Logo y nombre de la secretaría */
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    height: 48px;
+    width: auto;
+}
+
+.header-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #222;
+}
+
+
+/* Buscador */
+
+.search-box {
+    display: flex;
+    align-items: center;
+}
+
+.search-box input {
+    width: 190px;
+    height: 30px;
+
+    border: 1px solid #8b9bb5;
+    border-radius: 4px 0 0 4px;
+
+    padding: 0 10px;
+    font-size: 11px;
+}
+
+.search-box button {
+    height: 30px;
+    width: 35px;
+
+    border: none;
+    background-color: #3366cc;
+    color: white;
+
+    border-radius: 0 4px 4px 0;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   MENÚ DE NAVEGACIÓN
+========================================= */
+
+.navbar {
+    height: 43px;
+    background-color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+
+    border-bottom: 1px solid #3366cc;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #222;
+
+    font-size: 13px;
+
+    padding: 0 28px;
+
+    display: flex;
+    align-items: center;
+
+    transition: 0.2s;
+}
+
+.navbar a:hover {
+    background-color: #e8f0ff;
+}
+
+.navbar a.active {
+    background-color: #3366cc;
+    color: white;
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.main-container {
+    width: 90%;
+    max-width: 1250px;
+
+    margin: 25px auto;
+}
+
+
+/* =========================================
+   BANNER PRINCIPAL
+========================================= */
+
+.banner {
+    width: 100%;
+    min-height: 300px;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    background-color: #65d4dd;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 40px 7%;
+
+    color: #12345b;
+}
+
+.banner-content {
+    width: 50%;
+}
+
+.banner h1 {
+    font-size: 28px;
+    color: #1554a6;
+
+    margin-bottom: 15px;
+}
+
+.banner p {
+    font-size: 16px;
+    line-height: 1.5;
+
+    margin-bottom: 25px;
+}
+
+.banner-image {
+    width: 42%;
+    max-height: 270px;
+    object-fit: contain;
+}
+
+
+/* =========================================
+   BOTONES
+========================================= */
+
+.btn-primary {
+    background-color: #3366cc;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 10px 25px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2455b5;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #3366cc;
+
+    border: 1px solid #3366cc;
+    border-radius: 5px;
+
+    padding: 9px 22px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   TARJETAS / SECCIONES
+========================================= */
+
+.card {
+    background-color: white;
+
+    border-radius: 6px;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+}
+
+.card-title {
+    color: #1554a6;
+
+    font-size: 21px;
+
+    margin-bottom: 15px;
+
+    border-bottom: 2px solid #3366cc;
+
+    padding-bottom: 8px;
+}
+
+.card p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   PÁGINA MISIÓN
+========================================= */
+
+.page-banner {
+    background-color: #f0f0f0;
+
+    min-height: 75px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 5%;
+
+    border-bottom: 2px solid #3366cc;
+}
+
+.page-banner h1 {
+    color: #1554a6;
+    font-size: 21px;
+}
+
+.content-section {
+    background-color: white;
+
+    padding: 25px;
+
+    margin-top: 20px;
+
+    border-radius: 5px;
+}
+
+.content-section h2 {
+    font-size: 18px;
+    color: #222;
+
+    margin-bottom: 12px;
+}
+
+.content-section p {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   PÁGINA DE PRUEBAS
+========================================= */
+
+.test-container {
+    background-color: white;
+
+    width: 100%;
+
+    padding: 25px;
+
+    border-radius: 6px;
+}
+
+.test-title {
+    color: #1554a6;
+
+    font-size: 20px;
+
+    margin-bottom: 10px;
+}
+
+.test-description {
+    font-size: 13px;
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================
+   SIMULACRO
+========================================= */
+
+.simulator {
+    display: flex;
+
+    gap: 20px;
+
+    align-items: flex-start;
+}
+
+
+/* Área de pregunta */
+
+.question-area {
+    flex: 1;
+
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 6px;
+
+    min-height: 500px;
+}
+
+.question-number {
+    color: #1554a6;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+.question-text {
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   OPCIONES DE RESPUESTA
+========================================= */
+
+.options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.option {
+    border: 1px solid #ccc;
+
+    background-color: white;
+
+    border-radius: 5px;
+
+    padding: 13px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.option:hover {
+    border-color: #3366cc;
+
+    background-color: #eef4ff;
+}
+
+.option.selected {
+    border-color: #3366cc;
+
+    background-color: #dce8ff;
+}
+
+
+/* =========================================
+   PANEL DE NÚMEROS
+========================================= */
+
+.question-panel {
+    width: 230px;
+
+    background-color: white;
+
+    padding: 15px;
+
+    border-radius: 6px;
+
+    border: 1px solid #ddd;
+}
+
+.question-panel-title {
+    color: #1554a6;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+.question-numbers {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 8px;
+}
+
+.question-number-btn {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+
+    border: 1px solid #aaa;
+
+    background-color: white;
+
+    color: #333;
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+.question-number-btn:hover {
+    border-color: #3366cc;
+
+    color: #3366cc;
+}
+
+.question-number-btn.active {
+    background-color: #3366cc;
+
+    color: white;
+
+    border-color: #3366cc;
+}
+
+.question-number-btn.answered {
+    background-color: #dce8ff;
+
+    border-color: #3366cc;
+}
+
+
+/* =========================================
+   NAVEGACIÓN DEL SIMULACRO
+========================================= */
+
+.test-navigation {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 25px;
+}
+
+.test-navigation button {
+    min-width: 120px;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+    background-color: #333;
+
+    color: white;
+
+    margin-top: 40px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .header {
+        padding: 0 3%;
+    }
+
+    .navbar a {
+        padding: 0 12px;
+    }
+
+    .main-container {
+        width: 95%;
+    }
+
+    .banner {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .banner-content {
+        width: 100%;
+    }
+
+    .banner-image {
+        width: 60%;
+    }
+
+    .simulator {
+        flex-direction: column;
+    }
+
+    .question-panel {
+        width: 100%;
+    }
+
+    .question-numbers {
+        grid-template-columns: repeat(10, 1fr);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .header {
+        height: auto;
+
+        padding: 15px;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .navbar {
+        overflow-x: auto;
+
+        justify-content: flex-start;
+    }
+
+    .navbar a {
+        white-space: nowrap;
+    }
+
+    .banner h1 {
+        font-size: 21px;
+    }
+
+    .question-numbers {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
