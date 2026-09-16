@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-x7^7h_evzd0m(b!%2kgh5(rkx$0!vt(9lbckb4+=kry#tt*t@#'
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-
+#SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = 'django-insecure-x7^7h_evzd0m(b!%2kgh5(rkx$0!vt(9lbckb4+=kry#tt*t@#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'inicioSesion', 'instituciones' #, 'subirArchivo', 'resultados'
 ]
 
 MIDDLEWARE = [
@@ -78,8 +79,13 @@ WSGI_APPLICATION = 'backend2.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'proyectoSaber11',
+        'USER': 'postgres',
+        'PASSWORD' :'123',   
+        'HOST' : 'localhost',
+        'PORT' : '5432'
+
     }
 }
 

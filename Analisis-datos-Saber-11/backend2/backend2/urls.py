@@ -15,8 +15,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
+
+ 
+
+#urlpatterns = [
+ #    path("login/", views.login_view, name="login_prueba"),
+  #  path("crear-usuario/", views.crear_usuario_prueba_view, name="crear_usuario_prueba"),
+#]
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+   path("admin/", admin.site.urls),
+    path("api/login/", include("inicioSesion.urls"))
+    #path("api/archivos/", include("subirArchivos.urls")),
+    #path("api/resultados/", include("resultados.urls")) ,
+ ]
+
+# Endpoints finales:
+#   POST   http://localhost:8000/api/login-prueba/crear-usuario/   -> crea un usuario de prueba
+#   POST   http://localhost:8000/api/login-prueba/login/           -> inicia sesion
+#   GET    http://localhost:8000/api/login-prueba/login/           -> lista usuarios (para copiar un id_usuario)
+#   PUT/PATCH http://localhost:8000/api/login-prueba/login/?correo=...&contrasena=...  -> actualiza clave
+#   DELETE http://localhost:8000/api/login-prueba/login/?correo=...  -> elimina el usuario
+
+
