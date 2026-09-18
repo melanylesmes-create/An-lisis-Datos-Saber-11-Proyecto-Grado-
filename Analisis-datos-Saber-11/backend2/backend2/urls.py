@@ -26,16 +26,14 @@ from django.urls import path,include
 
 urlpatterns = [
    path("admin/", admin.site.urls),
-    path("api/login/", include("inicioSesion.urls"))
-    #path("api/archivos/", include("subirArchivos.urls")),
+    path("api/", include("inicioSesion.urls")),
+    path("api/archivos/", include("subirArchivos.urls")),
     #path("api/resultados/", include("resultados.urls")) ,
  ]
 
 # Endpoints finales:
-#   POST   http://localhost:8000/api/login-prueba/crear-usuario/   -> crea un usuario de prueba
-#   POST   http://localhost:8000/api/login-prueba/login/           -> inicia sesion
-#   GET    http://localhost:8000/api/login-prueba/login/           -> lista usuarios (para copiar un id_usuario)
-#   PUT/PATCH http://localhost:8000/api/login-prueba/login/?correo=...&contrasena=...  -> actualiza clave
-#   DELETE http://localhost:8000/api/login-prueba/login/?correo=...  -> elimina el usuario
+#   POST http://localhost:8000/api/iniciar/
+#   GET  http://localhost:8000/api/mostrar/
+#   POST http://localhost:8000/api/crear-usuario/
 
 
