@@ -11,7 +11,6 @@ def login_view(request):
  
     # POST -> validar credenciales (Create de la sesion)
     if request.method == "POST":
-
         try:
             # Convierte el JSON recibido a datos de Python
             datos = json.loads(request.body)
@@ -59,6 +58,7 @@ def mostrar_usuario_view (request):
 @csrf_exempt
 def crear_usuario_prueba_view(request):
 
+    #POST
     if request.method == "POST":
 
         try:

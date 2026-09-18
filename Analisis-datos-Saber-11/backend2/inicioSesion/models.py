@@ -29,7 +29,7 @@ class Usuario(models.Model):
         db_column="id_institucion", null=True, blank=True
     )
     
-    tipo_identificacion = models.CharField(max_length=20, default="CC")
+    tipo_identificacion = models.CharField(max_length=20, default="C.C")
     numero_identificacion = models.CharField(max_length=30, unique=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -47,4 +47,3 @@ class Usuario(models.Model):
  
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
- 

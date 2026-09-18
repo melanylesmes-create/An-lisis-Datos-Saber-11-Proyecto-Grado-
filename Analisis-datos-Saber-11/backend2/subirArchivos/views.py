@@ -58,36 +58,52 @@ def subir_archivo_view(request):
     filas_guardadas = 0
     errores = []
  
+    # Recorrer las filas del Excel
     for i, fila in df.iterrows():
+
         try:
-            # Busca la institucion por codigo_dane, o la crea si no existe
-            institucion = InstitucionEducativa.objects.get(
-                codigo_dane=str(fila.get("codigo_dane"))
+            # Obtenemos el código DANE que viene en el Excel
+            codigo_dane = str(fila.get("codigo_dane"))
+
+            # Buscamos si la institución ya existe
+            try:
+                institucion = InstitucionEducativa.objects.get(
+                codigo_dane=codigo_dane
+                )
+
+            # Si NO existe, la creamos
+            except InstitucionEducativa.DoesNotExist:
+                institucion = InstitucionEducativa.objects.create(
+                codigo_dane=codigo_dane,
+                nombre=fila.get("nombre_institucion", ""),
+                tipo_institucion="oficial",
+                direccion="",
+                municipio=fila.get("ciudad", ""),
+                zona="urbana"
             )
 
-            # Obtener año
+            # Obtenemos el año
             referencia = str(fila.get("referencia", ""))
+            anio = int(referencia.split("-")[0])
 
-            if referencia:
-                anio = int(referencia.split("-")[0])
-            else:
-                anio = None
-
-            #Guardar resultado en POSTGRESQL
+            # Guardamos los resultados Saber 11
             ResultadoRealSaber11.objects.create(
-                id_carga=carga,
-                id_institucion=institucion,
-                anio=anio,
-                puntaje_global=fila.get("puntaje_global"),
-                lectura_critica=fila.get("lectura_critica"),
-                matematicas=fila.get("matematicas"),
-                sociales_ciudadanas=fila.get("ciencias_sociales"),
-                ciencias_naturales=fila.get("ciencias_naturales"),
-                ingles=fila.get("ingles_nivel"),
-            )
+            id_carga=carga,
+            id_institucion=institucion,
+            anio=anio,
+            puntaje_global=fila.get("puntaje_global"),
+            lectura_critica=fila.get("lectura_critica"),
+            matematicas=fila.get("matematicas"),
+            sociales_ciudadanas=fila.get("ciencias_sociales"),
+            ciencias_naturales=fila.get("ciencias_naturales"),
+            ingles=fila.get("ingles_nivel")
+        )
+
+            # Si todo salió bien, contamos la fila
             filas_guardadas += 1
+
         except Exception as e:
-            errores.append(f"Fila {i + 2}: {e}")  # +2 por el encabezado y el indice 0
+            errores.append(f"Fila {i + 2}: {e}")
  
     if not errores:
         carga.estado_importacion = "procesado"
