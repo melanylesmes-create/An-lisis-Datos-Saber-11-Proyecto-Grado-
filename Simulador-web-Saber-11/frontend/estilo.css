@@ -1,0 +1,88 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fuente y cuerpo */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Barra superior azul */
+.barra-superior {
+  background-color: #3267CC; /* color exacto */
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.logo {
+  height: 45px;
+  width: auto;
+}
+
+/* Barra secundaria blanca */
+.barra-secundaria {
+  background-color: #F2F2F2; /* color blanco exacto */
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo a la izquierda, buscador a la derecha */
+  padding: 0 40px; /* margen interno para que no quede al borde */
+  position: fixed;
+  top: 60px; /* justo debajo de la barra azul */
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo-secundario {
+  height: 80px;
+  width: auto;
+}
+
+/* Buscador */
+.buscador {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 5px 10px;
+  width: 250px; /* ancho fijo */
+}
+
+.buscador input {
+  border: none;
+  outline: none;
+  flex: 1; /* ocupa todo el espacio disponible */
+  padding: 5px;
+  font-size: 14px;
+}
+
+.buscador button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #3267CC; /* azul institucional */
+}
+
+/* Contenido principal */
+main {
+  margin-top: 170px; /* espacio para ambas barras */
+  padding: 20px;
+}
+
+

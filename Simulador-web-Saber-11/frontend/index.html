@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Saber 11</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Barra superior azul */
+    .barra-superior {
+      background-color: #3267CC;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .logo {
+      height: 45px;
+      width: auto;
+    }
+
+    /* Barra secundaria blanca */
+    .barra-secundaria {
+      background-color: #Fefefe;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* logo a la izquierda, buscador a la derecha */
+      padding: 0 20px;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .logo-secundario {
+      height: 80px;
+      width: auto;
+    }
+
+    /* Buscador */
+    .buscador {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      padding: 5px 10px;
+    }
+
+    .buscador input {
+      border: none;
+      outline: none;
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .buscador button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #3267CC; /* azul institucional */
+    }
+
+    /* Contenido principal */
+    main {
+      margin-top: 170px; /* espacio para ambas barras */
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Barra azul -->
+    <div class="barra-superior">
+      <img src="C:\Users\carlo\Downloads\imagenes simulador\govco.png" alt="gov.co" class="logo">
+    </div>
+
+    <!-- Barra blanca con logo y buscador -->
+    <div class="barra-secundaria">
+      <img src="C:\Users\carlo\Downloads\imagenes simulador\alcaldia.png" alt="Imagen secundaria" class="logo-secundario">
+
+      <div class="buscador">
+        <input type="text" placeholder="Buscar en la página">
+        <button type="submit">&#128269;</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Bienvenido al Simulador Saber 11</h1>
+    <p>Accede a simulacros y prepárate para las pruebas Saber 11. ¡Logra tus metas académicas!</p>
+  </main>
+</body>
+</html>
