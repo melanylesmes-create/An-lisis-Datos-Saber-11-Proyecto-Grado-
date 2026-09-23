@@ -7,7 +7,6 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-// BASE DE DATOS EN MEMORIA
 let usuarios = [
   { id: 1, nombre: "Admin", correo: "admin@test.com", password: "123", rol: "administrador" }
 ];
@@ -22,7 +21,6 @@ let preguntas = [
   }
 ];
 
-// 1. AUTENTICACIÓN (LOGIN)
 app.post('/api/login', (req, res) => {
   const { correo, password } = req.body;
   const usuario = usuarios.find(u => u.correo === correo && u.password === password);
@@ -33,7 +31,6 @@ app.post('/api/login', (req, res) => {
   return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
 });
 
-// 2. GESTIÓN DE USUARIOS
 app.get('/api/usuarios', (req, res) => res.status(200).json(usuarios));
 
 app.post('/api/usuarios', (req, res) => {
@@ -46,7 +43,6 @@ app.post('/api/usuarios', (req, res) => {
   res.status(201).json({ mensaje: 'Usuario registrado con éxito', usuario: nuevoUsuario });
 });
 
-// 3. GESTIÓN DE PREGUNTAS
 app.get('/api/preguntas', (req, res) => res.status(200).json(preguntas));
 
 app.post('/api/preguntas', (req, res) => {
@@ -59,10 +55,9 @@ app.post('/api/preguntas', (req, res) => {
   res.status(201).json({ mensaje: 'Pregunta creada con éxito', pregunta: nuevaPregunta });
 });
 
-// 4. REALIZAR SIMULACRO (EVALUAR RESPUESTAS)
 app.post('/api/simulacro/evaluar', (req, res) => {
-  const { respuestasUsuario } = req.body; // Array de objetos: [{ preguntaId: 1, respuesta: "4" }]
-  
+  const { respuestasUsuario } = req.body;
+
   if (!respuestasUsuario || !Array.isArray(respuestasUsuario)) {
     return res.status(400).json({ mensaje: 'Formato de respuestas inválido' });
   }
