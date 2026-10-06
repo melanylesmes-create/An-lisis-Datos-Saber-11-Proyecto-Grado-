@@ -1,10 +1,9 @@
 from django.shortcuts import render
 # Create your views here.
 import pandas as pd
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .etl import extraer_datos, validar_estructura
+from .etl import extraer_datos, validar_estructura, limpiar_datos, validar_datos, procesar_referencia
 from .models import CargaArchivo
 from resultados.models import ResultadoRealSaber11
 from instituciones.models import InstitucionEducativa
@@ -36,19 +35,25 @@ def subir_archivo_view(request):
 
     # -- EXTRAER datos mediante el módulo ETL ---
     try:
+        # E - Extraer
         datos = extraer_datos(archivo, extension)
+
+        # T - Transformar
         validar_estructura(datos)
+        datos = limpiar_datos(datos)
+        validar_datos(datos)
+
     except Exception as e:
         return JsonResponse({
-        "error": f"No se pudo extraer la información del archivo: {e}"
+        "error": f"Error al procesar el archivo: {e}"
     }, status=400)
- 
+
     # Registrar el usuario que realizo una carga
     carga = CargaArchivo.objects.create(
         id_usuario_id=id_usuario,
         nombre_archivo=archivo.name,
         tipo_archivo=extension,
-        estado_importacion="procesado",
+        estado_importacion="pendiente",
     )
  
     # Recorrer las filas
@@ -79,15 +84,15 @@ def subir_archivo_view(request):
                 zona="urbana"
             )
 
-            # Obtenemos el año
-            referencia = str(fila.get("referencia", ""))
-            anio = int(referencia.split("-")[0])
+            # Obtenemos año y periodo de la referencia
+            anio, periodo = procesar_referencia(fila.get("referencia"))
 
             # Guardamos los resultados Saber 11
             ResultadoRealSaber11.objects.create(
             id_carga=carga,
             id_institucion=institucion,
             anio=anio,
+            periodo=periodo,
             puntaje_global=fila.get("puntaje_global"),
             lectura_critica=fila.get("lectura_critica"),
             matematicas=fila.get("matematicas"),
@@ -103,7 +108,7 @@ def subir_archivo_view(request):
             errores.append(f"Fila {i + 2}: {e}")
  
     if not errores:
-        carga.estado_importacion = "pendiente"
+        carga.estado_importacion = "procesado"
     else:
         carga.estado_importacion = "error"
     carga.save()

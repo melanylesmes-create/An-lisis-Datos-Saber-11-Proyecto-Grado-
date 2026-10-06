@@ -142,3 +142,8 @@ def validar_datos(datos):
         procesar_referencia(fila.get("referencia"))
 
     return True
+
+# Calcula el puntaje global cuando no viene en el archivo.
+def calcular_puntaje_global(lc, mat, soc, cn, ing):
+    promedio = ((lc * 3) + (mat * 3) + (soc * 3) + (cn * 3) + ing) / 13
+    return round(promedio * 5)
