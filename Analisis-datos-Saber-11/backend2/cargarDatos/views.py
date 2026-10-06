@@ -4,7 +4,7 @@ import pandas as pd
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from .etl import extraer_datos, validar_estructura
 from .models import CargaArchivo
 from resultados.models import ResultadoRealSaber11
 from instituciones.models import InstitucionEducativa
@@ -34,17 +34,14 @@ def subir_archivo_view(request):
     if extension not in ("csv", "xlsx"):
         return JsonResponse({"error": "No es CSV o Excel (.xlsx)"}, status=400)
 
-    #Leer archivo con pandas
+    # -- EXTRAER datos mediante el módulo ETL ---
     try:
-        if extension == "csv":
-            df = pd.read_csv(archivo)
-        else:
-            df = pd.read_excel(archivo)
+        datos = extraer_datos(archivo, extension)
+        validar_estructura(datos)
     except Exception as e:
         return JsonResponse({
-            "error": f"No se pudo leer el archivo: {e}"
-        }, status=400)
-
+        "error": f"No se pudo extraer la información del archivo: {e}"
+    }, status=400)
  
     # Registrar el usuario que realizo una carga
     carga = CargaArchivo.objects.create(
@@ -59,7 +56,7 @@ def subir_archivo_view(request):
     errores = []
  
     # Recorrer las filas del Excel
-    for i, fila in df.iterrows():
+    for i, fila in datos.iterrows():
 
         try:
             # Obtenemos el código DANE que viene en el Excel
@@ -106,7 +103,7 @@ def subir_archivo_view(request):
             errores.append(f"Fila {i + 2}: {e}")
  
     if not errores:
-        carga.estado_importacion = "procesado"
+        carga.estado_importacion = "pendiente"
     else:
         carga.estado_importacion = "error"
     carga.save()
