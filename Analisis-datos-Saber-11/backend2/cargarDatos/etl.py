@@ -13,24 +13,13 @@ def extraer_datos(archivo, extension):
 
     return datos
 
-# ==========================================
 # T - TRANSFORMACIÓN
-#===========================================
 def validar_estructura(datos):
 
     # Columnas que esperamos encontrar en el archivo.
     # Estas son necesarias para poder procesar los resultados.
-    columnas_requeridas = [
-        "codigo_dane",
-        "nombre_institucion",
-        "referencia",
-        "puntaje_global",
-        "lectura_critica",
-        "matematicas",
-        "ciencias_sociales",
-        "ciencias_naturales",
-        "ingles_nivel"
-    ]
+    columnas_requeridas = [ "codigo_dane", "nombre_institucion", "referencia", "puntaje_global",
+        "lectura_critica", "matematicas", "ciencias_sociales", "ciencias_naturales","ingles_nivel" ]
 
     # Aquí guardaremos las columnas que NO encontremos.
     columnas_faltantes = []
@@ -53,9 +42,8 @@ def validar_estructura(datos):
 
     # Si no faltó ninguna columna, la estructura es válida.
     return True
-#=============================================
+
 # Segunda parte: limpiar los datos
-#===========================================
 
 def limpiar_datos(datos):
 
@@ -93,13 +81,9 @@ def procesar_referencia(referencia):
 
     # Convertimos la referencia a texto y quitamos
     # espacios que puedan venir del Excel.
-    #
-    # Ejemplo:
-    # " 2025-1 " -> "2025-1"
     referencia = str(referencia).strip()
 
     # Separamos el texto usando el guion.
-    #
     # "2025-1" -> ["2025", "1"]
     partes = referencia.split("-")
 
@@ -133,3 +117,28 @@ def procesar_referencia(referencia):
 
     # Devolvemos los dos valores por separado.
     return anio, periodo
+
+# EX03 - VALIDAR DATOS OBLIGATORIOS
+
+def validar_datos(datos):
+
+    # Datos que no pueden estar vacíos.
+    campos_obligatorios = [ "codigo_dane", "nombre_institucion", "referencia", "lectura_critica", "matematicas",
+        "ciencias_sociales", "ciencias_naturales","ingles"]
+
+    # Recorremos cada fila del archivo.
+    for indice, fila in datos.iterrows():
+
+        # Revisamos los campos obligatorios.
+        for campo in campos_obligatorios:
+
+            # pd.isna() detecta valores vacíos o  los NA que tiene pandas
+            if pd.isna(fila.get(campo)):
+                raise ValueError(
+                    f"Fila {indice + 2}: falta el campo '{campo}'."
+                )
+
+        # También comprobamos que la referencia sea válida.
+        procesar_referencia(fila.get("referencia"))
+
+    return True
