@@ -85,3 +85,51 @@ def limpiar_datos(datos):
 
     # Devolvemos los datos ya limpiados.
     return datos_limpios
+
+
+# Tercera parte: validar la referencia
+
+def procesar_referencia(referencia):
+
+    # Convertimos la referencia a texto y quitamos
+    # espacios que puedan venir del Excel.
+    #
+    # Ejemplo:
+    # " 2025-1 " -> "2025-1"
+    referencia = str(referencia).strip()
+
+    # Separamos el texto usando el guion.
+    #
+    # "2025-1" -> ["2025", "1"]
+    partes = referencia.split("-")
+
+    # La referencia debe tener exactamente dos partes:
+    # el año y el periodo.
+    if len(partes) != 2:
+        raise ValueError(
+            f"Referencia '{referencia}' incorrecta. "
+            "Debe tener el formato AAAA-1 o AAAA-2."
+        )
+
+    # Guardamos cada parte por separado.
+    anio_texto = partes[0]
+    periodo_texto = partes[1]
+
+    # Verificamos que ambas partes sean números.
+    if not anio_texto.isdigit() or not periodo_texto.isdigit():
+        raise ValueError(
+            f"Referencia '{referencia}' incorrecta."
+        )
+
+    # Convertimos los textos a números enteros.
+    anio = int(anio_texto)
+    periodo = int(periodo_texto)
+
+    # Solo permitimos periodo 1 o periodo 2.
+    if periodo not in (1, 2):
+        raise ValueError(
+            f"El periodo de '{referencia}' debe ser 1 o 2."
+        )
+
+    # Devolvemos los dos valores por separado.
+    return anio, periodo
