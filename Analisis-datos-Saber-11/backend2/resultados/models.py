@@ -4,7 +4,7 @@ from django.db import models
 
 # resultados/models.py
 from django.db import models
-from subirArchivos.models import CargaArchivo
+from cargarDatos.models import CargaArchivo
 from instituciones.models import InstitucionEducativa
 
 
@@ -18,6 +18,7 @@ class ResultadoRealSaber11(models.Model):
         InstitucionEducativa, on_delete=models.PROTECT, db_column="id_institucion"
     )
     anio = models.IntegerField()
+    periodo = models.IntegerField(null=True, blank=True)
     puntaje_global = models.IntegerField(null=True, blank=True)
     lectura_critica = models.IntegerField(null=True, blank=True)
     matematicas = models.IntegerField(null=True, blank=True)
