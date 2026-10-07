@@ -1,21 +1,35 @@
 // Importamos los estilos de la navegación
 import "../styles/Navegacion.css"
+// Indicamos que Navegacion recibirá una función llamada setPagina
+interface NavegacionProps {
+    setPagina: (pagina: string) => void
+}
 
-// Creamos el componente Navegacion
-export default function Navegacion() {
+function Navegacion({ setPagina }: NavegacionProps) {
 
     return (
         <nav className="navegacion">
 
-            {/* Enlaces principales de la plataforma */}
-            <a href="#">Inicio</a>
+            {/* Cambia la página a Inicio */}
+            <button onClick={() => setPagina("inicio")}>
+                Inicio
+            </button>
 
-            <a href="#">Simulacro web</a>
+            <button>
+                Simulacro web
+            </button>
 
-            <a href="#">Análisis de datos</a>
+            {/* Cambia la página a Análisis */}
+            <button onClick={() => setPagina("analisis")}>
+                Análisis de datos
+            </button>
 
-            <a href="#">Acerca de nosotros</a>
+            <button>
+                Acerca de nosotros
+            </button>
 
         </nav>
     )
 }
+
+export default Navegacion

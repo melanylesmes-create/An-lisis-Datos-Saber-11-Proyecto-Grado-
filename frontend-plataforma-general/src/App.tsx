@@ -1,25 +1,32 @@
-// Importamos el encabezado
+import { useState } from "react"
 import Encabezado from "./components/Encabezado"
-
-// Importamos la página de inicio
-import Inicio from "./pages/Inicio"
 import Navegacion from "./components/Navegacion"
-// Importamos los estilos generales
+import Inicio from "./pages/Inicio"
+import Analisis from "./pages/Analisis"
 import "./styles/General.css"
-
 
 function App() {
 
+    // Guarda qué página está viendo actualmente el usuario.
+    // Al iniciar la plataforma mostramos "inicio".
+    const [pagina, setPagina] = useState("inicio")
+
     return (
         <>
-            {/* Encabezado de la plataforma */}
+            {/* Encabezado institucional */}
             <Encabezado />
 
-            {/* Menú principal */}
-            <Navegacion />
+            {/* 
+                Enviamos setPagina a Navegacion.
+                Así el menú puede cambiar la página que queremos mostrar.
+            */}
+            <Navegacion setPagina={setPagina} />
 
-            {/* Contenido de la página principal */}
-            <Inicio />
+            {/* Si la página seleccionada es inicio, mostramos Inicio */}
+            {pagina === "inicio" && <Inicio />}
+
+            {/* Si selecciona análisis, mostramos Analisis */}
+            {pagina === "analisis" && <Analisis />}
         </>
     )
 }

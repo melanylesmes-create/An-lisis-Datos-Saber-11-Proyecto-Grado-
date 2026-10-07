@@ -1,43 +1,49 @@
-/* =====================================
-   MENÚ DE NAVEGACIÓN
-   ===================================== */
+/* =========================================
+   BARRA DE NAVEGACIÓN
+   ========================================= */
 
 .navegacion {
-
-    /* Coloca los enlaces uno al lado del otro */
+    /* Coloca las opciones una al lado de la otra */
     display: flex;
 
-    /* Centra todo el menú horizontalmente */
+    /* Centra las opciones horizontalmente */
     justify-content: center;
+
+    /* Línea inferior suave */
+    border-bottom: 1px solid #d9e0ea;
 
     /* Fondo blanco */
     background-color: white;
-
-    /* Línea inferior del menú */
-    border-bottom: 1px solid #d9e0ea;
 }
 
 
-/* Cada opción del menú */
-.navegacion a {
+/* =========================================
+   BOTONES DEL MENÚ
+   ========================================= */
 
-    /* Espacio dentro de cada opción */
-    padding: 18px 30px;
+.navegacion button {
+    /* Quitamos el diseño predeterminado del botón */
+    border: none;
+    background: transparent;
 
-    /* Quitamos el subrayado típico de los enlaces */
-    text-decoration: none;
+    /* Espacio interno */
+    padding: 20px 35px;
 
-    /* Azul institucional */
-    color: #3367cc;
+    /* Tamaño del texto */
+    font-size: 18px;
 
-    /* Tamaño de letra */
-    font-size: 17px;
+    /* Color institucional */
+    color: #2f63c7;
+
+    /* Cambia el cursor al pasar por encima */
+    cursor: pointer;
+
+    /* Suaviza el cambio de color */
+    transition: background-color 0.2s;
 }
 
 
-/* Cuando pasamos el mouse sobre una opción */
-.navegacion a:hover {
-
-    /* Fondo azul muy suave */
+/* Cuando el mouse pasa sobre una opción */
+.navegacion button:hover {
     background-color: #f1f5fb;
 }
