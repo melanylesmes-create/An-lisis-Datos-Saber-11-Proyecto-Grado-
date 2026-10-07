@@ -1,23 +1,23 @@
-// Importamos el archivo que contiene los estilos del encabezado
+// Importamos los estilos del encabezado
 import "../styles/Encabezado.css"
 
-// Creamos el componente Encabezado
-export default function Encabezado() {
+function Encabezado() {
 
     return (
-        <header className="encabezado">
+        <header>
 
-            {/* Barra azul superior */}
+            {/* Barra azul superior de GOV.CO */}
             <div className="barra-gov">
                 GOV.CO
             </div>
 
-            {/* Información de la entidad */}
-            <div className="encabezado-contenido">
+            {/* Encabezado con la información institucional */}
+            <div className="encabezado">
 
-                <div>
-                    <p>ALCALDÍA DE POPAYÁN</p>
-                    <h2>SECRETARÍA DE EDUCACIÓN</h2>
+                {/* Nombre de la institución */}
+                <div className="institucion">
+                    <span>ALCALDÍA DE POPAYÁN</span>
+                    <strong>SECRETARÍA DE EDUCACIÓN</strong>
                 </div>
 
             </div>
@@ -25,3 +25,5 @@ export default function Encabezado() {
         </header>
     )
 }
+
+export default Encabezado

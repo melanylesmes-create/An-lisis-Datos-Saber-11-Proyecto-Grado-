@@ -1,62 +1,76 @@
-/* ==============================
-   ENCABEZADO DE LA PLATAFORMA
-   ============================== */
+/* ========================================
+   BARRA SUPERIOR GOV.CO
+======================================== */
 
-
-/* Barra azul superior donde aparece GOV.CO */
 .barra-gov {
-
     /* Fondo azul institucional */
-    background-color: #3367cc;
+    background-color: #3366cc;
 
     /* Texto blanco */
     color: white;
 
-    /* Espacio interno */
-    padding: 8px 7%;
+    /* Espacio arriba/abajo y a los lados */
+    padding: 6px 8%;
 
     /* Tamaño del texto */
-    font-size: 16px;
+    font-size: 14px;
+
+    /* Alinea GOV.CO hacia la izquierda */
+    text-align: left;
 }
 
 
-/* Parte blanca del encabezado */
-.encabezado-contenido {
+/* ========================================
+   ENCABEZADO INSTITUCIONAL
+======================================== */
 
-    /* Permite organizar los elementos fácilmente */
+.encabezado {
+    /* Organiza el contenido con Flexbox */
     display: flex;
 
-    /* Centra verticalmente el contenido */
+    /* Centra verticalmente */
     align-items: center;
 
-    /* Espacio interno */
-    padding: 22px 7%;
+    /* Mismo espacio lateral que GOV.CO */
+    padding: 20px 8%;
 
     /* Fondo blanco */
     background-color: white;
 
     /* Línea inferior */
     border-bottom: 1px solid #d9e0ea;
+
+    /* Alineamos el texto a la izquierda */
+    text-align: left;
 }
 
 
-/* Texto Alcaldía de Popayán */
-.encabezado-contenido p {
+/* ========================================
+   INFORMACIÓN DE LA INSTITUCIÓN
+======================================== */
 
-    margin: 0;
+.institucion {
+    /* Coloca los elementos usando Flexbox */
+    display: flex;
 
-    color: #666;
+    /* Alcaldía arriba y Secretaría abajo */
+    flex-direction: column;
 
-    font-size: 14px;
+    /* Los alinea hacia la izquierda */
+    align-items: flex-start;
+
+    /* Evita que otro estilo centre el texto */
+    text-align: left;
 }
 
 
-/* Texto Secretaría de Educación */
-.encabezado-contenido h2 {
+/* ALCALDÍA DE POPAYÁN */
+.institucion span {
+    font-size: 13px;
+}
 
-    margin: 3px 0 0;
 
-    font-size: 22px;
-
-    color: #1f2937;
+/* SECRETARÍA DE EDUCACIÓN */
+.institucion strong {
+    font-size: 18px;
 }
