@@ -1,0 +1,71 @@
+/* ==============================
+   ESTILOS GENERALES
+   ============================== */
+
+
+/* Aplicamos box-sizing a todos los elementos */
+* {
+    box-sizing: border-box;
+}
+
+
+/* Configuración general de la página */
+body {
+
+    /* Quitamos el margen que agrega el navegador */
+    margin: 0;
+
+    /* Tipo de letra */
+    font-family: Arial, Helvetica, sans-serif;
+
+    /* Fondo gris muy claro */
+    background-color: #f5f7fa;
+
+    /* Color general del texto */
+    color: #1f2937;
+}
+
+
+/* Contenedor de la página de inicio */
+.inicio {
+
+    /* Ancho máximo del contenido */
+    max-width: 1000px;
+
+    /* Centra el contenido */
+    margin: 40px auto;
+
+    /* Espacio a los lados */
+    padding: 0 20px;
+}
+
+
+/* Tarjeta blanca de Inicio */
+.contenido-inicio {
+
+    background-color: white;
+
+    padding: 40px;
+
+    border-radius: 10px;
+
+    border: 1px solid #e2e6ec;
+}
+
+
+/* Título Inicio */
+.contenido-inicio h1 {
+
+    margin-top: 0;
+
+    font-size: 32px;
+}
+
+
+/* Párrafos */
+.contenido-inicio p {
+
+    line-height: 1.7;
+
+    color: #4b5563;
+}

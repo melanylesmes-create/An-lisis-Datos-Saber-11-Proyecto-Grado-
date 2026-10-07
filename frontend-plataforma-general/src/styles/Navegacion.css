@@ -1,0 +1,49 @@
+/* =========================================
+   BARRA DE NAVEGACIÓN
+========================================= */
+
+.navegacion {
+    /* Coloca las opciones horizontalmente */
+    display: flex;
+
+    /* Centra las opciones */
+    justify-content: center;
+
+    /* Línea inferior */
+    border-bottom: 1px solid #d9e0ea;
+
+    /* Fondo blanco */
+    background-color: white;
+}
+
+
+/* =========================================
+   BOTONES DEL MENÚ
+========================================= */
+
+.navegacion button {
+    /* Quitamos el estilo normal del botón */
+    border: none;
+    background: transparent;
+
+    /* Espacio interno */
+    padding: 20px 35px;
+
+    /* Tamaño del texto */
+    font-size: 18px;
+
+    /* Azul institucional */
+    color: #2f63c7;
+
+    /* Mano al pasar el mouse */
+    cursor: pointer;
+
+    /* Cambio suave */
+    transition: background-color 0.2s;
+}
+
+
+/* Al pasar el mouse */
+.navegacion button:hover {
+    background-color: #f1f5fb;
+}

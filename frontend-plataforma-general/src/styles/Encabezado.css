@@ -1,0 +1,76 @@
+/* ========================================
+   BARRA SUPERIOR GOV.CO
+======================================== */
+
+.barra-gov {
+    /* Fondo azul institucional */
+    background-color: #3366cc;
+
+    /* Texto blanco */
+    color: white;
+
+    /* Espacio arriba/abajo y a los lados */
+    padding: 6px 8%;
+
+    /* Tamaño del texto */
+    font-size: 14px;
+
+    /* Alinea GOV.CO hacia la izquierda */
+    text-align: left;
+}
+
+
+/* ========================================
+   ENCABEZADO INSTITUCIONAL
+======================================== */
+
+.encabezado {
+    /* Organiza el contenido con Flexbox */
+    display: flex;
+
+    /* Centra verticalmente */
+    align-items: center;
+
+    /* Mismo espacio lateral que GOV.CO */
+    padding: 20px 8%;
+
+    /* Fondo blanco */
+    background-color: white;
+
+    /* Línea inferior */
+    border-bottom: 1px solid #d9e0ea;
+
+    /* Alineamos el texto a la izquierda */
+    text-align: left;
+}
+
+
+/* ========================================
+   INFORMACIÓN DE LA INSTITUCIÓN
+======================================== */
+
+.institucion {
+    /* Coloca los elementos usando Flexbox */
+    display: flex;
+
+    /* Alcaldía arriba y Secretaría abajo */
+    flex-direction: column;
+
+    /* Los alinea hacia la izquierda */
+    align-items: flex-start;
+
+    /* Evita que otro estilo centre el texto */
+    text-align: left;
+}
+
+
+/* ALCALDÍA DE POPAYÁN */
+.institucion span {
+    font-size: 13px;
+}
+
+
+/* SECRETARÍA DE EDUCACIÓN */
+.institucion strong {
+    font-size: 18px;
+}
