@@ -1,0 +1,62 @@
+/* ==============================
+   ENCABEZADO DE LA PLATAFORMA
+   ============================== */
+
+
+/* Barra azul superior donde aparece GOV.CO */
+.barra-gov {
+
+    /* Fondo azul institucional */
+    background-color: #3367cc;
+
+    /* Texto blanco */
+    color: white;
+
+    /* Espacio interno */
+    padding: 8px 7%;
+
+    /* Tamaño del texto */
+    font-size: 16px;
+}
+
+
+/* Parte blanca del encabezado */
+.encabezado-contenido {
+
+    /* Permite organizar los elementos fácilmente */
+    display: flex;
+
+    /* Centra verticalmente el contenido */
+    align-items: center;
+
+    /* Espacio interno */
+    padding: 22px 7%;
+
+    /* Fondo blanco */
+    background-color: white;
+
+    /* Línea inferior */
+    border-bottom: 1px solid #d9e0ea;
+}
+
+
+/* Texto Alcaldía de Popayán */
+.encabezado-contenido p {
+
+    margin: 0;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* Texto Secretaría de Educación */
+.encabezado-contenido h2 {
+
+    margin: 3px 0 0;
+
+    font-size: 22px;
+
+    color: #1f2937;
+}

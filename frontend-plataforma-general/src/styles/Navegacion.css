@@ -1,0 +1,43 @@
+/* =====================================
+   MENÚ DE NAVEGACIÓN
+   ===================================== */
+
+.navegacion {
+
+    /* Coloca los enlaces uno al lado del otro */
+    display: flex;
+
+    /* Centra todo el menú horizontalmente */
+    justify-content: center;
+
+    /* Fondo blanco */
+    background-color: white;
+
+    /* Línea inferior del menú */
+    border-bottom: 1px solid #d9e0ea;
+}
+
+
+/* Cada opción del menú */
+.navegacion a {
+
+    /* Espacio dentro de cada opción */
+    padding: 18px 30px;
+
+    /* Quitamos el subrayado típico de los enlaces */
+    text-decoration: none;
+
+    /* Azul institucional */
+    color: #3367cc;
+
+    /* Tamaño de letra */
+    font-size: 17px;
+}
+
+
+/* Cuando pasamos el mouse sobre una opción */
+.navegacion a:hover {
+
+    /* Fondo azul muy suave */
+    background-color: #f1f5fb;
+}
