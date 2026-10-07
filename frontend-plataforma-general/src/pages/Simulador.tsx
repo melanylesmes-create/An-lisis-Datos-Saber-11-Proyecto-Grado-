@@ -1,7 +1,7 @@
 export default function Simulador() {
   const irSimulador = () => {
     // Redirige al frontend del simulador que corre en su propio puerto
-    window.location.href = "http://localhost:5174/";
+    window.location.href = "http://localhost:5173/";
   };
 
   return (
