@@ -1,88 +1,85 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Fuente y cuerpo */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f2f2f2;
 }
 
-/* Barra superior azul */
-.barra-superior {
-  background-color: #3267CC; /* color exacto */
-  height: 60px;
+.header {
+  background-color: #3267cc;
+  color: white;
+  padding: 15px 30px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  justify-content: space-between;
 }
 
 .logo {
-  height: 45px;
-  width: auto;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
-/* Barra secundaria blanca */
-.barra-secundaria {
-  background-color: #F2F2F2; /* color blanco exacto */
-  height: 100px;
+.title h2,
+.title h3 {
+  margin: 0;
+  text-align: right;
+}
+
+.login-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* logo a la izquierda, buscador a la derecha */
-  padding: 0 40px; /* margen interno para que no quede al borde */
-  position: fixed;
-  top: 60px; /* justo debajo de la barra azul */
-  left: 0;
-  width: 100%;
-  z-index: 999;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-top: 60px;
 }
 
-.logo-secundario {
-  height: 80px;
-  width: auto;
-}
-
-/* Buscador */
-.buscador {
-  display: flex;
-  align-items: center;
+.login-box {
   background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.login-box h1 {
+  color: #003366;
+}
+
+.login-box p {
+  font-size: 0.9em;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+input {
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 25px;
-  padding: 5px 10px;
-  width: 250px; /* ancho fijo */
+  border-radius: 5px;
 }
 
-.buscador input {
+button {
+  background-color: #3267cc;
+  color: white;
   border: none;
-  outline: none;
-  flex: 1; /* ocupa todo el espacio disponible */
-  padding: 5px;
-  font-size: 14px;
-}
-
-.buscador button {
-  background: none;
-  border: none;
+  padding: 12px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 18px;
-  color: #3267CC; /* azul institucional */
+  font-weight: bold;
 }
 
-/* Contenido principal */
-main {
-  margin-top: 170px; /* espacio para ambas barras */
-  padding: 20px;
+button:hover {
+  background-color: #003366;
 }
 
-
+.back-link {
+  display: block;
+  margin-top: 20px;
+  color: #3267cc;
+  text-decoration: none;
+  font-size: 0.9em;
+}
