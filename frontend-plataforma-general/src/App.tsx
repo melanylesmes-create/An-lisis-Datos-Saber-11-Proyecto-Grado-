@@ -3,6 +3,7 @@ import Encabezado from "./components/Encabezado"
 import Navegacion from "./components/Navegacion"
 import Inicio from "./pages/Inicio"
 import Analisis from "./pages/Analisis"
+import Simulador from "./pages/Simulador"
 import "./styles/General.css"
 
 function App() {
@@ -27,6 +28,11 @@ function App() {
 
             {/* Si selecciona análisis, mostramos Analisis */}
             {pagina === "analisis" && <Analisis />}
+
+            {/* Si selecciona simullador, mostramos simulador */}
+            {pagina === "simulador" && <Simulador />}
+            
+
         </>
     )
 }

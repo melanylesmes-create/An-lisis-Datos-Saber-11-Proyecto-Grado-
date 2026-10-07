@@ -15,9 +15,10 @@ function Navegacion({ setPagina }: NavegacionProps) {
                 Inicio
             </button>
 
-            <button>
+            <button onClick={() => setPagina("simulador")}>
                 Simulacro web
             </button>
+
 
             {/* Cambia la página a Análisis */}
             <button onClick={() => setPagina("analisis")}>
