@@ -7,7 +7,7 @@ function Analisis() {
         // Cambia la página actual por la dirección
         // donde está ejecutándose el frontend
         // del módulo de análisis de datos.
-        window.location.href = "http://localhost:5174/"
+        window.location.href = "http://localhost:5175/"
     }
 
     return (
