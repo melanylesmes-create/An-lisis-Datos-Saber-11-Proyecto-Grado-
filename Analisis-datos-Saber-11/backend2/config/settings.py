@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'inicioSesion', 'instituciones', 'cargarDatos', 'resultados'
+    'inicioSesion', 'instituciones', 'cargarDatos', 'resultados', 'exportarPDF'
 ]
 
 
