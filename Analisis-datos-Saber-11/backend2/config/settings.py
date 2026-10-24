@@ -68,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend2.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -85,12 +85,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend2.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
+# TODO: pasar a variables de entorno dentro de un archivo de configuración .env
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
