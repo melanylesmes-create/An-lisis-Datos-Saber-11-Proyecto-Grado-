@@ -1,149 +1,229 @@
 import pandas as pd
 
-
+#=====================================
+# EXTRACCIÓN DE DATOS
+#=====================================
 def extraer_datos(archivo, extension):
+    #Lee un archivo Excel o CSV y devuelve un DataFrame.
+    #DataFrame: tabla de pandas que contiene filas y columnas
+
+    extension = extension.lower().strip()
+
     if extension == "csv":
-        datos = pd.read_csv(archivo)
+        # sep=None Identifica si el separador es "," o ";"
+        datos = pd.read_csv(archivo, sep=None, engine="python", dtype=str)
 
     elif extension == "xlsx":
-        datos = pd.read_excel(archivo)
+        #dtype=str conserva los códigos como,evita perder ceros iniciales en los identificador
+        datos = pd.read_excel(archivo, dtype=str)
 
     else:
         raise ValueError("Formato de archivo no permitido")
 
     return datos
 
-# T - TRANSFORMACIÓN
+#=========================================
+# VALIDAR ESTRUCTURA
+
 def validar_estructura(datos):
+    #Comprobar que el archivo tenga las columnas necesarias para procesar los 
+    #resultados de Saber 11.
+    columnas_requeridas =[
+        "nombre_institución", "referencia", "lectura_critica", "matematicas", "ciencias_sociales",
+        "ciencias_naturales", "ingles"
+    ]
 
-    # Columnas que esperamos encontrar en el archivo.
-    # Estas son necesarias para poder procesar los resultados.
-    columnas_requeridas = [ "codigo_dane", "nombre_institucion", "referencia", "puntaje_global",
-        "lectura_critica", "matematicas", "ciencias_sociales", "ciencias_naturales","ingles_nivel" ]
+    #identificar las columnas que no estan en el archivo.
+    columnas_faltantes =[
+        columna for columna in columnas_requeridas
+        if columna not in datos.columns
+    ]
 
-    # Aquí guardaremos las columnas que NO encontremos.
-    columnas_faltantes = []
-
-    # Recorremos cada columna requerida.
-    for columna in columnas_requeridas:
-
-        # Si la columna no existe en el archivo,
-        # la agregamos a la lista de faltantes.
-        if columna not in datos.columns:
-            columnas_faltantes.append(columna)
-
-    # EX02:
-    # Si falta al menos una columna, la estructura
-    # del archivo no corresponde a la esperada.
     if columnas_faltantes:
-        raise ValueError(
-            f"Estructura incorrecta. Faltan las columnas: {columnas_faltantes}"
-        )
+        raise ValueError("Faltan las columnas: {columnas_faltantes}")
 
-    # Si no faltó ninguna columna, la estructura es válida.
+    #Codigo_dane y puntaje globlal no son obligatorias, porque pueden necesitar verificación.
     return True
 
-# Segunda parte: limpiar los datos
+# ==========================================================
+# T - LIMPIEZA DE DATOS
 
 def limpiar_datos(datos):
-
-    # Creamos una copia de los datos.
-    # Así evitamos modificar directamente los datos originales
+    #Limpia los nombres de las columnas y los valores vacíos.
+    # Trabajamos con una copia para conservar los datos originales en memoria.
     datos_limpios = datos.copy()
 
-    # Quitamos espacios innecesarios de los nombres
-    # de las columnas.
-    datos_limpios.columns = datos_limpios.columns.str.strip()
+    # Quitamos espacios y normalizamos los encabezados. Ejemplo: " Matemáticas " -> "matemáticas"
+    datos_limpios.columns = ( datos_limpios.columns.astype(str).str.strip().str.lower())
 
-    # Reemplazamos valores que representan
-    # datos faltantes por el valor estándar de Pandas.
-    #
-    # N.D. = No disponible
-    # N/A  = Not availible
-    # " "   = vacio
-    datos_limpios = datos_limpios.replace(
-        ["N.D.", "N.D", "N/A", ""],
-        pd.NA
-        # NA = en pandas (pd) representa que falta un dato :D
-    )
+    # Quitamos espacios al inicio y al final de los textos.
+    for columna in datos_limpios.columns:
+        datos_limpios[columna] = (datos_limpios[columna].astype("string").str.strip())
 
-    # Eliminamos filas completamente vacías.
-    # Si toda la fila está vacía, no tiene información útil
+    # Identificamos posibles representaciones de valores faltantes.
+    datos_limpios = datos_limpios.replace(["N.D.", "N.D", "N/A", "", "NULL", "null"],pd.NA)
+
+    # Eliminamos filas que no contienen ningún dato.
     datos_limpios = datos_limpios.dropna(how="all")
 
-    # Devolvemos los datos ya limpiados.
+    # Si el archivo no tiene código DANE, creamos la columna para completarla posteriormente.
+    if "codigo_dane" not in datos_limpios.columns: 
+        datos_limpios["codigo_dane"] = pd.NA
+
+    # Si no existe puntaje global, también lo creamos vacío.
+    if "puntaje_global" not in datos_limpios.columns:
+        datos_limpios["puntaje_global"] = pd.NA
+
     return datos_limpios
 
+# ==========================================================
+# T - DIAGNÓSTICO DEL ARCHIVO
 
-# Tercera parte: validar la referencia
+def diagnosticar_datos(datos):
+    # isnull().sum() cuenta los valores faltantes de cada columna.
+    valores_nulos = datos.isnull().sum().to_dict()
+
+    # dtypes permite conocer los tipos de datos.
+    tipos_datos = {
+        columna: str(tipo)
+        for columna, tipo in datos.dtypes.items()
+    }
+
+    # duplicated() identifica filas exactamente repetidas.
+    duplicados = int(datos.duplicated().sum())
+
+    return {
+        "total_registros": len(datos), "total_columnas": len(datos.columns),"columnas": datos.columns.tolist(),
+        "valores_nulos": { columna: int(cantidad) for columna, cantidad in valores_nulos.items()},
+        "tipos_datos": tipos_datos,"filas_duplicadas": duplicados
+    }
+
+# ==========================================================
+# T - PROCESAR REFERENCIA
 
 def procesar_referencia(referencia):
 
-    # Convertimos la referencia a texto y quitamos
-    # espacios que puedan venir del Excel.
-    referencia = str(referencia).strip()
+    #Separa 2025 de 1 en año:2025, periodo =1
+    if pd.isna(referencia):
+        raise ValueError("La referencia está vacía.")
 
-    # Separamos el texto usando el guion.
-    # "2025-1" -> ["2025", "1"]
+    referencia = str(referencia).strip()
     partes = referencia.split("-")
 
-    # La referencia debe tener exactamente dos partes:
-    # el año y el periodo.
     if len(partes) != 2:
-        raise ValueError(
-            f"Referencia '{referencia}' incorrecta. "
-            "Debe tener el formato AAAA-1 o AAAA-2."
+        raise ValueError(f"Referencia '{referencia}' incorrecta. ""Debe tener el formato AAAA-1 o AAAA-2."
         )
 
-    # Guardamos cada parte por separado.
-    anio_texto = partes[0]
-    periodo_texto = partes[1]
+    anio_texto, periodo_texto = partes
 
-    # Verificamos que ambas partes sean números.
-    if not anio_texto.isdigit() or not periodo_texto.isdigit():
+    if (len(anio_texto) != 4 or not anio_texto.isdigit() or not periodo_texto.isdigit()):
         raise ValueError(
             f"Referencia '{referencia}' incorrecta."
         )
 
-    # Convertimos los textos a números enteros.
     anio = int(anio_texto)
     periodo = int(periodo_texto)
 
-    # Solo permitimos periodo 1 o periodo 2.
     if periodo not in (1, 2):
         raise ValueError(
-            f"El periodo de '{referencia}' debe ser 1 o 2."
+            "El período debe ser 1 o 2."
         )
 
-    # Devolvemos los dos valores por separado.
     return anio, periodo
+# ==========================================================
+# T - TRANSFORMAR LOS PUNTAJES
 
-# EX03 - VALIDAR DATOS OBLIGATORIOS
+def transformar_datos(datos):
+
+    datos_transformados = datos.copy()
+    columnas_numericas = ["lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles","puntaje_global"]
+
+    for columna in columnas_numericas:
+        if columna in datos_transformados.columns:
+
+            # errors="coerce" convierte valores no numéricos en NaN, para que podamos detectarlos después.
+            datos_transformados[columna] = pd.to_numeric(datos_transformados[columna], errors="coerce")
+
+    # Separamos año y período. Si una referencia es incorrecta, se registrará
+    anios = []
+    periodos = []
+
+    for referencia in datos_transformados["referencia"]:
+        try:
+            anio, periodo = procesar_referencia(referencia)
+        except ValueError:
+            anio, periodo = None, None
+
+        anios.append(anio)
+        periodos.append(periodo)
+
+    datos_transformados["anio"] = anios
+    datos_transformados["periodo"] = periodos
+
+    return datos_transformados
+
+# ==========================================================
+# T - VALIDACIÓN DE LOS DATOS
 
 def validar_datos(datos):
 
-    # Datos que no pueden estar vacíos.
-    campos_obligatorios = [ "codigo_dane", "nombre_institucion", "referencia", "lectura_critica", "matematicas",
-        "ciencias_sociales", "ciencias_naturales","ingles"]
+    errores = []
 
-    # Recorremos cada fila del archivo.
+    campos_obligatorios = ["nombre_institucion","referencia","lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles"]
+
     for indice, fila in datos.iterrows():
 
-        # Revisamos los campos obligatorios.
+        # Suponemos encabezados en la primera fila.
+        # Por eso el primer registro corresponde a Excel fila 2.
+        numero_fila = indice + 2
+
         for campo in campos_obligatorios:
 
-            # pd.isna() detecta valores vacíos o  los NA que tiene pandas
             if pd.isna(fila.get(campo)):
-                raise ValueError(
-                    f"Fila {indice + 2}: falta el campo '{campo}'."
-                )
+                errores.append({"fila": numero_fila, "campo": campo, "mensaje": f"Falta el campo '{campo}'."})
 
-        # También comprobamos que la referencia sea válida.
-        procesar_referencia(fila.get("referencia"))
+        # Verificamos que la referencia tenga un formato válido.
+        try:
+            procesar_referencia(fila.get("referencia"))
+        except ValueError as error:
+            errores.append({"fila": numero_fila,"campo": "referencia","mensaje": str(error) })
 
-    return True
+        # Verificamos los rangos de los puntajes por área.
+        for campo in ["lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles"]:
+            valor = fila.get(campo)
 
-# Calcula el puntaje global cuando no viene en el archivo.
+            if pd.notna(valor) and not (0 <= valor <= 100):
+                errores.append({"fila": numero_fila, "campo": campo, "mensaje": "El puntaje debe estar entre 0 y 100."})
+
+        # Si existe un puntaje global, validamos su rango.
+        puntaje_global = fila.get("puntaje_global")
+
+        if pd.notna(puntaje_global) and not (
+            0 <= puntaje_global <= 500
+        ):
+            errores.append({"fila": numero_fila, "campo": "puntaje_global","mensaje": "El puntaje global debe estar entre 0 y 500."})
+
+    return errores
+
+# ==========================================================
+# T - IDENTIFICAR CÓDIGOS DANE FALTANTES
+
+def identificar_codigos_dane(datos):
+    datos = datos.copy()
+
+    datos["estado_dane"] = "Pendiente de verificar"
+
+    datos.loc[
+        datos["codigo_dane"].isna(),
+        "estado_dane"
+    ] = "Falta código DANE"
+
+    return datos
+
+# ==========================================================
+# CÁLCULO AUXILIAR DEL PUNTAJE GLOBAL
+
 def calcular_puntaje_global(lc, mat, soc, cn, ing):
-    promedio = ((lc * 3) + (mat * 3) + (soc * 3) + (cn * 3) + ing) / 13
+    promedio = ( (lc * 3) + (mat * 3) + (soc * 3) + (cn * 3) + ing) / 13
+
     return round(promedio * 5)
