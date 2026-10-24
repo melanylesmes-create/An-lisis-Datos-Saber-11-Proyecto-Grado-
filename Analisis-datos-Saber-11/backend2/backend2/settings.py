@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'backend2.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
+# TODO: pasar a variables de entorno dentro de un archivo de configuración .env
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
