@@ -41,12 +41,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'inicioSesion', 'instituciones', 'subirArchivos' , 'resultados'
+    'corsheaders',
+    'inicioSesion', 'instituciones', 'cargarDatos', 'resultados'
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+       # Plataforma general
+    "http://localhost:5173",
+
+    # Frontend del módulo de análisis
+    "http://localhost:5174",
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # Permite manejar peticiones desde el frontend React
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

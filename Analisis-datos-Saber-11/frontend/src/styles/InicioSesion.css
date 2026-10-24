@@ -1,0 +1,181 @@
+/* ========================================
+   PÁGINA DE INICIO DE SESIÓN
+======================================== */
+
+.pagina-login {
+    /* La página ocupa toda la pantalla */
+    min-height: 100vh;
+    /* Color de fondo */
+    background-color: #f4f6f9;
+}
+
+
+/* ========================================
+   BARRA GOV.CO
+======================================== */
+
+.barra-gov {
+    /* Fondo azul institucional */
+    background-color: #3366cc;
+    /* Texto blanco */
+    color: white;
+    /* Espacio interno */
+    padding: 6px 8%;
+    /* Tamaño del texto */
+    font-size: 14px;
+}
+
+
+/* ========================================
+   ENCABEZADO
+======================================== */
+
+.encabezado {
+    /* Organiza los elementos horizontalmente */
+    display: flex;
+    /* Coloca un elemento a cada extremo */
+    justify-content: space-between;
+    /* Centra verticalmente */
+    align-items: center;
+    /* Espacio interno */
+    padding: 20px 8%;
+    background-color: white;
+    /* Línea inferior */
+    border-bottom: 1px solid #d9e0ea;
+}
+
+/* Información de la institución */
+.institucion {
+    display: flex;
+    /* Coloca los textos uno debajo del otro */
+    flex-direction: column;
+}
+
+.institucion span {
+    font-size: 13px;
+}
+
+.institucion strong {
+    font-size: 18px;
+}
+
+/* Enlace para volver */
+.encabezado a {
+    color: #3366cc;
+    text-decoration: none;
+}
+
+
+/* ========================================
+   CONTENIDO
+======================================== */
+
+.contenido-login {
+    /* Utilizamos Flexbox */
+    display: flex;
+    /* Centra horizontalmente */
+    justify-content: center;
+    /* Centra verticalmente */
+    align-items: center;
+    padding: 60px 20px;
+}
+
+
+/* ========================================
+   TARJETA DEL LOGIN
+======================================== */
+
+.tarjeta-login {
+    background-color: white;
+    width: 420px;
+    /* Espacio interno */
+    padding: 40px;
+    /* Bordes redondeados */
+    border-radius: 12px;
+    /* Sombra suave */
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+/* Icono superior */
+.icono-login {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+
+/* Título */
+.tarjeta-login h1 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+/* Descripción */
+.tarjeta-login p {
+    text-align: center;
+    color: #667085;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+
+/* ========================================
+   CAMPOS
+======================================== */
+
+.campo {
+    display: flex;
+
+    /* Label arriba e input abajo */
+    flex-direction: column;
+
+    margin-bottom: 20px;
+}
+
+
+.campo label {
+    margin-bottom: 7px;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.campo input {
+    padding: 12px;
+
+    border: 1px solid #cfd6df;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+}
+
+
+/* ========================================
+   BOTÓN
+======================================== */
+
+.boton-login {
+    width: 100%;
+
+    padding: 12px;
+
+    background-color: #3366cc;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+}
+
+
+/* Cambio cuando el mouse pasa sobre el botón */
+.boton-login:hover {
+    background-color: #2855ad;
+}

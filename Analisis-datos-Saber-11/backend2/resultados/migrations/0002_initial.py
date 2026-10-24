@@ -11,14 +11,14 @@ class Migration(migrations.Migration):
     dependencies = [
         ('instituciones', '0001_initial'),
         ('resultados', '0001_initial'),
-        ('subirArchivos', '0001_initial'),
+        ('cargarDatos', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='resultadorealsaber11',
             name='id_carga',
-            field=models.ForeignKey(db_column='id_carga', on_delete=django.db.models.deletion.CASCADE, related_name='resultados', to='subirArchivos.cargaarchivo'),
+            field=models.ForeignKey(db_column='id_carga', on_delete=django.db.models.deletion.CASCADE, related_name='resultados', to='cargarDatos.cargaarchivo'),
         ),
         migrations.AddField(
             model_name='resultadorealsaber11',

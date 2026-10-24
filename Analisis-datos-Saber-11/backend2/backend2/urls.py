@@ -27,7 +27,7 @@ from django.urls import path,include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("inicioSesion.urls")),
-    path("api/archivos/", include("subirArchivos.urls")),
+    path("api/archivos/", include("cargarDatos.urls")),
     path("api/resultados/", include("resultados.urls")) ,
  ]
 
