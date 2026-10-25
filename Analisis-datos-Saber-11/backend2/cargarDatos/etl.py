@@ -2,23 +2,71 @@ import pandas as pd
 
 #=====================================
 # EXTRACCIÓN DE DATOS
-#=====================================
-def extraer_datos(archivo, extension):
-    #Lee un archivo Excel o CSV y devuelve un DataFrame.
-    #DataFrame: tabla de pandas que contiene filas y columnas
 
-    extension = extension.lower().strip()
+def extraer_datos(archivo, extension):
 
     if extension == "csv":
-        # sep=None Identifica si el separador es "," o ";"
-        datos = pd.read_csv(archivo, sep=None, engine="python", dtype=str)
+        # Detectamos automáticamente el separador del CSV
+        datos = pd.read_csv(
+            archivo,
+            sep=None,
+            engine="python",
+            dtype=str
+        )
 
     elif extension == "xlsx":
-        #dtype=str conserva los códigos como,evita perder ceros iniciales en los identificador
-        datos = pd.read_excel(archivo, dtype=str)
+        # El Excel oficial tiene los encabezados
+        # en la fila 7 (índice 6 de Pandas).
+        datos = pd.read_excel(
+            archivo,
+            header=6,
+            dtype=str
+        )
 
     else:
         raise ValueError("Formato de archivo no permitido")
+
+    return datos
+
+# Normalizar nombres de columnas del ICFES
+def normalizar_columnas(datos):
+
+    # Creamos una copia para no modificar los datos originales
+    datos = datos.copy()
+
+    # Relacionamos los nombres oficiales con los de nuestro proyecto
+    equivalencias = {
+        "CODINST": "codigo_icfes", "NOMBREINSTITUCION": "nombre_institucion",
+        "CODIGOMUNICIPIO": "codigo_municipio","NOMBREMUNICIPIO": "ciudad",
+        "DEPARTAMENTO": "departamento", "NATURALEZA": "naturaleza",
+        "PROMLECTURACRITICA": "lectura_critica", "PROMMATEMATICA": "matematicas",
+        "PROMSOCIALESYCIUDADANAS": "ciencias_sociales", "PROMCIENCIASNATURALES": "ciencias_naturales",
+        "PROMINGLES": "ingles", "PERIODO": "periodo_icfes"}
+
+    # Cambiamos los nombres utilizando el diccionario
+    datos = datos.rename(columns=equivalencias)
+
+    return datos
+
+# FILTRAR POPAYAN 
+def filtrar_popayan(datos):
+
+    # Creamos una copia para no modificar el original
+    datos = datos.copy()
+
+    # Verificamos que exista la columna ciudad
+    if "ciudad" not in datos.columns:
+        raise ValueError(
+            "No existe la columna ciudad para filtrar Popayán."
+        )
+
+    # Filtramos los registros correspondientes a Popayán
+    datos = datos[
+        datos["ciudad"].str.upper().str.strip() == "POPAYÁN"
+    ]
+
+    # Reiniciamos los índices después del filtrado
+    datos = datos.reset_index(drop=True)
 
     return datos
 
@@ -26,23 +74,30 @@ def extraer_datos(archivo, extension):
 # VALIDAR ESTRUCTURA
 
 def validar_estructura(datos):
-    #Comprobar que el archivo tenga las columnas necesarias para procesar los 
-    #resultados de Saber 11.
-    columnas_requeridas =[
-        "nombre_institución", "referencia", "lectura_critica", "matematicas", "ciencias_sociales",
-        "ciencias_naturales", "ingles"
+  # Columnas obligatorias del archivo oficial
+    columnas_requeridas = [
+        "nombre_institucion",
+        "periodo_icfes",
+        "lectura_critica",
+        "matematicas",
+        "ciencias_sociales",
+        "ciencias_naturales",
+        "ingles"
     ]
 
-    #identificar las columnas que no estan en el archivo.
-    columnas_faltantes =[
-        columna for columna in columnas_requeridas
+    # Identificamos las columnas que faltan
+    columnas_faltantes = [
+        columna
+        for columna in columnas_requeridas
         if columna not in datos.columns
     ]
 
+    # Si faltan columnas, mostramos un error
     if columnas_faltantes:
-        raise ValueError("Faltan las columnas: {columnas_faltantes}")
+        raise ValueError(
+            f"Faltan las columnas: {columnas_faltantes}"
+        )
 
-    #Codigo_dane y puntaje globlal no son obligatorias, porque pueden necesitar verificación.
     return True
 
 # ==========================================================
@@ -131,34 +186,27 @@ def procesar_referencia(referencia):
 
     return anio, periodo
 # ==========================================================
-# T - TRANSFORMAR LOS PUNTAJES
+# T - TRANSFORMAR DATOS
 
 def transformar_datos(datos):
-
+    # Creamos una copia de los datos
     datos_transformados = datos.copy()
-    columnas_numericas = ["lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles","puntaje_global"]
 
+    # Columnas que contienen puntajes numéricos
+    columnas_numericas = ["lectura_critica", "matematicas", "ciencias_sociales", "ciencias_naturales", "ingles", "puntaje_global"]
+
+    # Convertimos los puntajes a valores numéricos
     for columna in columnas_numericas:
         if columna in datos_transformados.columns:
+            datos_transformados[columna] = pd.to_numeric( datos_transformados[columna], errors="coerce")
 
-            # errors="coerce" convierte valores no numéricos en NaN, para que podamos detectarlos después.
-            datos_transformados[columna] = pd.to_numeric(datos_transformados[columna], errors="coerce")
+    # Convertimos el período oficial a texto
+    periodo = datos_transformados["periodo_icfes"].astype("string").str.strip()
 
-    # Separamos año y período. Si una referencia es incorrecta, se registrará
-    anios = []
-    periodos = []
+    # Extraemos el año y el semestre
+    datos_transformados["anio"] = pd.to_numeric( periodo.str[:4], errors="coerce")
 
-    for referencia in datos_transformados["referencia"]:
-        try:
-            anio, periodo = procesar_referencia(referencia)
-        except ValueError:
-            anio, periodo = None, None
-
-        anios.append(anio)
-        periodos.append(periodo)
-
-    datos_transformados["anio"] = anios
-    datos_transformados["periodo"] = periodos
+    datos_transformados["periodo"] = pd.to_numeric(periodo.str[4:], errors="coerce" )
 
     return datos_transformados
 
@@ -169,39 +217,42 @@ def validar_datos(datos):
 
     errores = []
 
-    campos_obligatorios = ["nombre_institucion","referencia","lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles"]
+    # Campos obligatorios para cada institución
+    campos_obligatorios = ["nombre_institucion","periodo_icfes","lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles" ]
 
+    # Recorremos cada registro del archivo
     for indice, fila in datos.iterrows():
+        numero_fila = indice + 8
 
-        # Suponemos encabezados en la primera fila.
-        # Por eso el primer registro corresponde a Excel fila 2.
-        numero_fila = indice + 2
-
+        # Comprobar campos vacíos
         for campo in campos_obligatorios:
-
             if pd.isna(fila.get(campo)):
-                errores.append({"fila": numero_fila, "campo": campo, "mensaje": f"Falta el campo '{campo}'."})
+                errores.append({"fila": numero_fila, "campo": campo, "mensaje": "El campo está vacío."})
 
-        # Verificamos que la referencia tenga un formato válido.
-        try:
-            procesar_referencia(fila.get("referencia"))
-        except ValueError as error:
-            errores.append({"fila": numero_fila,"campo": "referencia","mensaje": str(error) })
-
-        # Verificamos los rangos de los puntajes por área.
-        for campo in ["lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles"]:
+        # Validar puntajes entre 0 y 100
+        for campo in [
+            "lectura_critica","matematicas","ciencias_sociales","ciencias_naturales","ingles" ]:
+            
             valor = fila.get(campo)
-
             if pd.notna(valor) and not (0 <= valor <= 100):
-                errores.append({"fila": numero_fila, "campo": campo, "mensaje": "El puntaje debe estar entre 0 y 100."})
+                errores.append({
+                    "fila": numero_fila,
+                    "campo": campo,
+                    "mensaje": "El puntaje debe estar entre 0 y 100."
+                })
 
-        # Si existe un puntaje global, validamos su rango.
-        puntaje_global = fila.get("puntaje_global")
+        # Validar año y período
+        anio = fila.get("anio")
+        periodo = fila.get("periodo")
 
-        if pd.notna(puntaje_global) and not (
-            0 <= puntaje_global <= 500
-        ):
-            errores.append({"fila": numero_fila, "campo": "puntaje_global","mensaje": "El puntaje global debe estar entre 0 y 500."})
+        if (
+            pd.isna(anio)
+            or pd.isna(periodo) or not (1900 <= anio <= 2100) or periodo not in (1, 2) or len(str(fila.get("periodo_icfes")).strip()) != 5  ):
+            errores.append({
+                "fila": numero_fila,
+                "campo": "periodo_icfes",
+                "mensaje": "El período debe tener el formato AAAA1 o AAAA2."
+            })
 
     return errores
 
@@ -209,10 +260,18 @@ def validar_datos(datos):
 # T - IDENTIFICAR CÓDIGOS DANE FALTANTES
 
 def identificar_codigos_dane(datos):
+
+    # Creamos una copia de los registros
     datos = datos.copy()
 
+    # Si no existe el código DANE, creamos la columna vacía
+    if "codigo_dane" not in datos.columns:
+        datos["codigo_dane"] = pd.NA
+
+    # Marcamos los códigos que requieren verificación
     datos["estado_dane"] = "Pendiente de verificar"
 
+    # Identificamos instituciones sin código DANE
     datos.loc[
         datos["codigo_dane"].isna(),
         "estado_dane"
