@@ -1,23 +1,51 @@
 import React, { useState } from 'react'
 import "../styles/InicioSesion.css"
 
-export default function InicioSesion() {
-    // Guarda la identificación escrita por el usuario
-    const [identificacion, setIdentificacion] = useState(" ")
-    // Guarda la contraseña escrita por el usuario
-    const [contrasena, setContrasena] = useState(" ")
-
-    // Envía los datos del inicio de sesión al backend
-    const iniciarSesion = async () => { const respuesta = await fetch( "http://localhost:8000/api/iniciar/",
-        // Indicamos que enviamos información en formato JSON
-        {method: "POST", headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ numero_identificacion: identificacion, contrasena: contrasena})
-        }
-    )
-    // Convierte la respuesta de Django a JSON
-    const datos = await respuesta.json()
-    console.log(datos)
+interface InicioSesionProps {
+  onLoginExitoso: () => void;
 }
+
+export default function InicioSesion({onLoginExitoso}:InicioSesionProps) {
+    // Guarda la identificación escrita por el usuario
+    const [identificacion, setIdentificacion] = useState("")
+    // Guarda la contraseña escrita por el usuario
+    const [contrasena, setContrasena] = useState("")
+
+        // Envía los datos del inicio de sesión al backend
+    // Envía las credenciales a Django
+    const iniciarSesion = async () => {
+    try {
+        const respuesta = await fetch(
+        "http://localhost:8000/api/iniciar/",
+        {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            numero_identificacion: identificacion.trim(),
+            contrasena: contrasena,
+            }),
+        }
+        );
+
+        // Convertimos la respuesta de Django a JSON
+        const datos = await respuesta.json();
+
+        console.log(datos);
+
+        // Verificamos si Django aceptó las credenciales
+        if (respuesta.ok) {
+        onLoginExitoso();
+        } else {
+        alert(datos.error || datos.mensaje || "Identificación o contraseña incorrecta.");
+        }
+
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        alert("No fue posible conectar con el servidor.");
+    }
+    };
 
   return (
     <>
@@ -76,5 +104,5 @@ export default function InicioSesion() {
 
         </div>
     </>
-  )
+  );
 }

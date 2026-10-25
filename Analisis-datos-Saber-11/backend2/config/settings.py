@@ -47,11 +47,8 @@ INSTALLED_APPS = [
 
 
 CORS_ALLOWED_ORIGINS = [
-       # Plataforma general
-    "http://localhost:5173",
-
-    # Frontend del módulo de análisis
-    "http://localhost:5174",
+  "http://localhost:5175",
+    "http://127.0.0.1:5175",
     ]
 
 MIDDLEWARE = [
