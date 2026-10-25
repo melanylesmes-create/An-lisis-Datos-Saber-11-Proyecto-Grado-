@@ -1,16 +1,26 @@
+
 import EncabezadoInstitucional from "../components/EncabezadoInstitucional";
 import SubirArchivo from "../components/SubirArchivo";
-import { useSubirArchivo } from "../hooks/useSubirArchivo";
+import TablaResultados from "../components/TablaResultados";
 
-export default function CargarDatosPage() {
+import type { RespuestaETL } from "../types/resultado";
 
-  // Custom Hook para administrar el ETL
-  const {
-    resultado,
-    cargando,
-    error,
-    subirArchivo
-  } = useSubirArchivo();
+// Propiedades que recibimos desde App.tsx
+interface CargarDatosPageProps {
+  resultado: RespuestaETL | null;
+  cargando: boolean;
+  error: string | null;
+  subirArchivo: (archivo: File) => Promise<void>;
+  onVerGraficas: () => void;
+}
+
+export default function CargarDatosPage({
+  resultado,
+  cargando,
+  error,
+  subirArchivo,
+  onVerGraficas,
+}: CargarDatosPageProps) {
 
   return (
     <div className="min-h-screen bg-[#F4F6F9]">
@@ -32,7 +42,7 @@ export default function CargarDatosPage() {
           </p>
         </section>
 
-        {/* Componente de carga mediante Props */}
+        {/* Componente para subir archivos */}
         <SubirArchivo
           onSubirArchivo={subirArchivo}
           cargando={cargando}
@@ -92,25 +102,41 @@ export default function CargarDatosPage() {
           </h3>
 
           <p className="mt-2 text-sm text-gray-500">
-            Aquí se mostrarán los resultados procesados
+            Aquí se muestran los resultados procesados
             de las instituciones educativas de Popayán.
           </p>
 
-          <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+          <div className="mt-6">
 
             {resultado ? (
-              <p className="text-gray-600">
-                Se encontraron {resultado.registros.length} registros.
-              </p>
+              <TablaResultados registros={resultado.registros} />
             ) : (
-              <p className="text-gray-400">
-                Aún no se ha procesado ningún archivo.
-              </p>
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+                <p className="text-gray-400">
+                  Aún no se ha procesado ningún archivo.
+                </p>
+              </div>
             )}
 
           </div>
-
         </section>
+
+        {/* Botón para continuar a las gráficas */}
+        {resultado && resultado.registros.length > 0 && (
+          <div className="mt-8 flex justify-end">
+
+            <button
+              type="button"
+              onClick={onVerGraficas}
+              className="rounded-lg bg-[#3366CC] px-8 py-3
+                         font-semibold text-white shadow-sm
+                         transition hover:bg-[#254E9E]"
+            >
+              Siguiente: Visualizar gráficas →
+            </button>
+
+          </div>
+        )}
 
         {/* Información del procesamiento temporal */}
         <p className="mt-6 text-center text-sm text-gray-500">

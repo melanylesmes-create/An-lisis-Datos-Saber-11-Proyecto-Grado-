@@ -1,9 +1,40 @@
-# resultados/urls.py
+
 from django.urls import path
-from . import views
+
+from .views import (
+    mostrar_resultados_view,
+    generar_grafica_areas,
+    generar_grafica_comparacion,
+    generar_grafica_ranking,
+)
 
 urlpatterns = [
-    path("mostrar-resultados", views.mostrar_resultados_view, name="mostrar-resultados"),
+    # Consultar resultados
+    path(
+        "mostrar-resultados/",
+        mostrar_resultados_view,
+        name="mostrar_resultados"
+    ),
+
+    # Gráfica de promedios por área
+    path(
+        "grafica-areas/",
+        generar_grafica_areas,
+        name="grafica_areas"
+    ),
+
+    # Comparación entre instituciones
+    path(
+        "grafica-comparacion/",
+        generar_grafica_comparacion,
+        name="grafica_comparacion"
+    ),
+
+    # Ranking de instituciones por área
+    path(
+        "grafica-ranking/",
+        generar_grafica_ranking,
+        name="grafica_ranking"
+    ),
 ]
 
-# GET http://localhost:8000/api/resultados/mostrar-resultados
