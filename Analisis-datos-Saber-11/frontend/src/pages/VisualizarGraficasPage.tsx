@@ -42,6 +42,80 @@ export default function VisualizarGraficasPage({
             registro.nombre_institucion === institucion
         );
 
+      
+const descargarPDF = async () => {
+  if (registrosFiltrados.length === 0) {
+    alert("No hay resultados para generar el informe.");
+    return;
+  }
+
+  try {
+    // Solicitamos el token CSRF a Django
+    const respuestaCSRF = await fetch(
+      "http://localhost:8000/api/archivos/csrf/",
+      { credentials: "include" }
+    );
+
+    if (!respuestaCSRF.ok) {
+      throw new Error("No se pudo solicitar el token CSRF.");
+    }
+
+    const token = document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith("csrftoken="))
+      ?.split("=")[1];
+
+    if (!token) {
+      throw new Error("No se encontró el token CSRF.");
+    }
+
+    // Enviamos los registros y el área seleccionada
+    const respuesta = await fetch(
+      "http://localhost:8000/api/exportar/pdf-completo/",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": decodeURIComponent(token),
+        },
+        body: JSON.stringify({
+          registros: registrosFiltrados,
+          area: area,
+        }),
+      }
+    );
+
+    if (!respuesta.ok) {
+      const error = await respuesta.json().catch(() => null);
+      throw new Error(
+        error?.error || "No fue posible generar el PDF."
+      );
+    }
+
+    // Convertimos la respuesta en un archivo descargable
+    const archivo = await respuesta.blob();
+    const url = URL.createObjectURL(archivo);
+
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "Informe_Completo_Saber11.pdf";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    URL.revokeObjectURL(url);
+
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Ocurrió un error al descargar el PDF."
+    );
+  }
+};
+
   return (
     <div className="min-h-screen bg-[#F4F6F9]">
 
@@ -126,8 +200,21 @@ export default function VisualizarGraficasPage({
 
 ) : null}
 
-
-
+{/* Botón para descargar el informe completo */}
+<div className="mt-8 flex justify-end">
+  <button
+    type="button"
+    onClick={descargarPDF}
+    disabled={registrosFiltrados.length === 0}
+    className="rounded-lg bg-[#3366CC] px-6 py-3
+               font-semibold text-white shadow-sm
+               hover:bg-[#254F9E]
+               disabled:cursor-not-allowed
+               disabled:opacity-50"
+  >
+    Descargar informe PDF
+  </button>
+</div>
       </main>
     </div>
   );
