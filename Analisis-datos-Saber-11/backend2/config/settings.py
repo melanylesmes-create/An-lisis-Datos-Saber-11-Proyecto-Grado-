@@ -45,11 +45,20 @@ INSTALLED_APPS = [
     'inicioSesion', 'instituciones', 'cargarDatos', 'resultados', 'exportarPDF'
 ]
 
-
+# Permite solicitudes desde el frontend React
 CORS_ALLOWED_ORIGINS = [
-  "http://localhost:5175",
+    "http://localhost:5175",
     "http://127.0.0.1:5175",
-    ]
+]
+
+# Permite el intercambio de cookies entre React y Django
+CORS_ALLOW_CREDENTIALS = True
+
+# Autoriza estos orígenes para solicitudes protegidas por CSRF
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5175",
+    "http://127.0.0.1:5175",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

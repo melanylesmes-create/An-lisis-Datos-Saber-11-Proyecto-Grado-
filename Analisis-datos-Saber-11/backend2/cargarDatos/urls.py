@@ -1,10 +1,8 @@
-# subirArchivo/urls.py
 from django.urls import path
-from . import views
+from .views import subir_archivo_view, obtener_csrf
 
 urlpatterns = [
-    #POST
-    path("subir/", views.subir_archivo_view, name="subir"),
+    path("subir/", subir_archivo_view, name="subir_archivo"),
+    path("csrf/", obtener_csrf, name="obtener_csrf"),
 ]
-
 # POST http://localhost:8000/api/archivos/subir/

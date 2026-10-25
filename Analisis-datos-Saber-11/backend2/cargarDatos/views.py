@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .servicios import ejecutar_etl
 import pandas as pd
-
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_GET
 
 # Recibe el archivo desde React y ejecuta el ETL.
 @require_POST
@@ -55,3 +56,11 @@ def subir_archivo_view(request):
         return JsonResponse({
             "error": str(error)
         }, status=400)
+
+# Entrega la cookie CSRF que React necesita
+@ensure_csrf_cookie
+@require_GET
+def obtener_csrf(request):
+    return JsonResponse({
+        "mensaje": "Cookie CSRF configurada correctamente."
+    })
