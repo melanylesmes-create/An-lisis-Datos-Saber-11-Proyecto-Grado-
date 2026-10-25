@@ -24,12 +24,15 @@ from django.urls import path,include
   #  path("crear-usuario/", views.crear_usuario_prueba_view, name="crear_usuario_prueba"),
 #]
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("inicioSesion.urls")),
     path("api/archivos/", include("cargarDatos.urls")),
-    path("api/resultados/", include("resultados.urls")) ,
- ]
+    path("api/resultados/", include("resultados.urls")),
+    path("api/exportar/", include("exportarPDF.urls")),
+]
+
 
 # Endpoints finales:
 #   POST http://localhost:8000/api/iniciar/
