@@ -1,0 +1,18 @@
+body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f2f2f2; }
+.header { background: #3267cc; color: #fff; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-weight: bold; font-size: 1.2em; }
+.title h2, .title h3 { margin: 0; text-align: right; }
+.nav { background: #003366; padding: 10px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.nav-btn { background: transparent; color: #fff; border: 1px solid transparent; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.nav-btn:hover, .nav-btn.activo { background: #3267cc; }
+.contenido { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+button { background: #3267cc; color: #fff; border: none; padding: 12px 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+button:hover { background: #003366; }
+.acciones { display: flex; gap: 12px; margin-top: 20px; }
+.login-box { background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,.1); max-width: 350px; margin: 0 auto; }
+form { display: flex; flex-direction: column; gap: 15px; }
+input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+.pregunta { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+.opcion { display: block; width: 100%; text-align: left; background: #eef2fb; color: #003366; margin-bottom: 8px; }
+.opcion.seleccionada { background: #3267cc; color: #fff; }
+.error { color: #c0392b; }
