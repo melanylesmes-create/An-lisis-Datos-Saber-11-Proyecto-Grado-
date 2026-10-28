@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import "../styles/InicioSesion.css"
+import { useState } from "react";
+import "../styles/InicioSesion.css";
+import EncabezadoInstitucional from "../components/EncabezadoInstitucional";
+import IconoSeguridad from "../components/IconoSeguridad";
 
 interface InicioSesionProps {
   onLoginExitoso: () => void;
@@ -51,34 +53,22 @@ export default function InicioSesion({onLoginExitoso}:InicioSesionProps) {
     <>
     <div className="pagina-login">
 
-            {/* Franja superior institucional */}
-            <div className="barra-gov">
-                GOV.CO
-            </div>
-
-            {/* Encabezado */}
-            <header className="encabezado">
-                <div className="institucion">
-                    <span>ALCALDÍA DE POPAYÁN</span>
-                    <strong>SECRETARÍA DE EDUCACIÓN</strong>
-                </div>
-
-                <a href="#">← Volver al inicio</a>
-            </header>
+            {/* Imporrtar encabezado */}
+            <EncabezadoInstitucional />
 
             {/* Contenido principal */}
             <main className="contenido-login">
 
                 <div className="tarjeta-login">
 
-                    {/*Acooooordarrrrmeeee de colooooocaarrr icooonoooo*/}
-                    <div className="icono-login"> :D </div>
+                    {/*Icono*/}
+                    <IconoSeguridad />
 
-                    <h1>Acceso al módulo</h1>
+                    <h1>Análisis de datos</h1>
 
                     <p>
-                        Ingresa con tu número de identificación para acceder
-                        al módulo de análisis de datos de los resultados Saber 11.
+                        Ingresa tu número de identificación y contraseña para acceder
+                        al módulo de análisis de datos.
                     </p>
 
                     <div className="campo">
