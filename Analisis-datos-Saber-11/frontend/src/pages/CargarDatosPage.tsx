@@ -1,5 +1,5 @@
 
-import EncabezadoInstitucional from "../components/EncabezadoInstitucional";
+
 import SubirArchivo from "../components/SubirArchivo";
 import TablaResultados from "../components/TablaResultados";
 
@@ -25,10 +25,8 @@ export default function CargarDatosPage({
   return (
     <div className="min-h-screen bg-[#F4F6F9]">
 
-      {/* Encabezado institucional */}
-      <EncabezadoInstitucional />
 
-      <main className="mx-auto max-w-6xl px-6 py-10">
+      <div className="mx-auto max-w-6xl px-6 py-10">
 
         {/* Título del módulo */}
         <section className="mb-8">
@@ -144,7 +142,7 @@ export default function CargarDatosPage({
           No se almacenan en la base de datos.
         </p>
 
-      </main>
+      </div>
     </div>
   );
 }

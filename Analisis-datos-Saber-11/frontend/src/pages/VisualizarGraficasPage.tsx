@@ -2,18 +2,12 @@
 import { useState } from "react";
 
 import GraficaRanking from "../components/GraficaRanking";
-import EncabezadoInstitucional from "../components/EncabezadoInstitucional";
 import GraficasResultados from "../components/GraficasResultados";
 import FiltrosGraficas from "../components/FiltrosGraficas";
 import GraficaComparacion from "../components/GraficaComparacion";
 import type { ResultadoSaber11 } from "../types/resultado";
-
 import AnalisisAI from "../components/AnalisisAI";
-
-import type {
-  AreaSaber11,
-  TipoGrafica,
-} from "../components/FiltrosGraficas";
+import type {AreaSaber11, TipoGrafica,} from "../components/FiltrosGraficas";
 
 // Propiedades recibidas desde App.tsx
 interface VisualizarGraficasPageProps {
@@ -21,21 +15,14 @@ interface VisualizarGraficasPageProps {
   onVolver: () => void;
 }
 
-export default function VisualizarGraficasPage({
-  registros,
-  onVolver,
-}: VisualizarGraficasPageProps) {
-
+export default function VisualizarGraficasPage({registros,onVolver,}: VisualizarGraficasPageProps) {
   // Institución seleccionada por el usuario
   const [institucion, setInstitucion] = useState("todas");
-
   // Área que queremos analizar
   const [area, setArea] = useState<AreaSaber11>("matematicas");
-
   // Tipo de análisis seleccionado
   const [tipoGrafica, setTipoGrafica] =
     useState<TipoGrafica>("promedios");
-
   // Filtramos los registros por institución
   const registrosFiltrados =
     institucion === "todas"
@@ -122,10 +109,8 @@ const descargarPDF = async () => {
   return (
     <div className="min-h-screen bg-[#F4F6F9]">
 
-      {/* Encabezado institucional */}
-      <EncabezadoInstitucional />
 
-      <main className="mx-auto max-w-6xl px-6 py-10">
+      <div className="mx-auto max-w-6xl px-6 py-10">
 
         {/* Botón para regresar */}
         <button
@@ -227,7 +212,7 @@ const descargarPDF = async () => {
     Descargar informe PDF
   </button>
 </div>
-      </main>
+      </div>
     </div>
   );
 }
