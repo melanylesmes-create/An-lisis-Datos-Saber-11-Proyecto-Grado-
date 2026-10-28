@@ -7,6 +7,9 @@ import GraficasResultados from "../components/GraficasResultados";
 import FiltrosGraficas from "../components/FiltrosGraficas";
 import GraficaComparacion from "../components/GraficaComparacion";
 import type { ResultadoSaber11 } from "../types/resultado";
+
+import AnalisisAI from "../components/AnalisisAI";
+
 import type {
   AreaSaber11,
   TipoGrafica,
@@ -199,6 +202,15 @@ const descargarPDF = async () => {
   />
 
 ) : null}
+
+{/* Análisis de resultados utilizando Ollama */}
+{registrosFiltrados.length > 0 && (
+  <AnalisisAI
+    key={institucion}
+    registros={registrosFiltrados}
+  />
+)}
+
 
 {/* Botón para descargar el informe completo */}
 <div className="mt-8 flex justify-end">

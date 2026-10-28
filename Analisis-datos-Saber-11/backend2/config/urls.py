@@ -31,6 +31,8 @@ urlpatterns = [
     path("api/archivos/", include("cargarDatos.urls")),
     path("api/resultados/", include("resultados.urls")),
     path("api/exportar/", include("exportarPDF.urls")),
+     # Módulo experimental de inteligencia artificial
+    path("api/analisis-ia/", include("analisisIA.urls")),
 ]
 
 
