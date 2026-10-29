@@ -6,35 +6,51 @@ from .views import (
     generar_grafica_areas,
     generar_grafica_comparacion,
     generar_grafica_ranking,
+    generar_grafica_mapa_calor,
+    generar_grafica_circular,
+    generar_grafica_evolucion,
+    generar_grafica_caja_bigotes,
 )
 
 urlpatterns = [
-    # Consultar resultados
     path(
         "mostrar-resultados/",
         mostrar_resultados_view,
-        name="mostrar_resultados"
+        name="mostrar_resultados",
     ),
-
-    # Gráfica de promedios por área
     path(
         "grafica-areas/",
         generar_grafica_areas,
-        name="grafica_areas"
+        name="grafica_areas",
     ),
-
-    # Comparación entre instituciones
     path(
         "grafica-comparacion/",
         generar_grafica_comparacion,
-        name="grafica_comparacion"
+        name="grafica_comparacion",
     ),
-
-    # Ranking de instituciones por área
     path(
         "grafica-ranking/",
         generar_grafica_ranking,
-        name="grafica_ranking"
+        name="grafica_ranking",
+    ),
+    path(
+        "grafica-mapa-calor/",
+        generar_grafica_mapa_calor,
+        name="grafica_mapa_calor",
+    ),
+    path(
+        "grafica-circular/",
+        generar_grafica_circular,
+        name="grafica_circular",
+    ),
+    path(
+        "grafica-evolucion/",
+        generar_grafica_evolucion,
+        name="grafica_evolucion",
+    ),
+    path(
+        "grafica-caja-bigotes/",
+        generar_grafica_caja_bigotes,
+        name="grafica_caja_bigotes",
     ),
 ]
-

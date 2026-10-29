@@ -1,7 +1,7 @@
 
 import type { ResultadoSaber11 } from "../types/resultado";
 
-// Áreas evaluadas en las pruebas Saber 11
+// Áreas disponibles en los registros procesados por el ETL.
 export type AreaSaber11 =
   | "lectura_critica"
   | "matematicas"
@@ -9,13 +9,16 @@ export type AreaSaber11 =
   | "ciencias_naturales"
   | "ingles";
 
-// Tipos de análisis disponibles
+// Tipos de gráficas que puede seleccionar el usuario.
 export type TipoGrafica =
   | "promedios"
   | "comparacion"
-  | "ranking";
+  | "ranking"
+  | "mapa_calor"
+  | "circular"
+  | "evolucion"
+  | "caja_bigotes";
 
-// Propiedades recibidas desde la página principal
 interface FiltrosGraficasProps {
   registros: ResultadoSaber11[];
   institucion: string;
@@ -35,104 +38,86 @@ export default function FiltrosGraficas({
   onAreaChange,
   onTipoGraficaChange,
 }: FiltrosGraficasProps) {
-
-  // Obtenemos los nombres únicos de las instituciones
+  // Obtiene los nombres únicos para llenar el filtro de instituciones.
   const instituciones = [
-    ...new Set(
-      registros.map((registro) => registro.nombre_institucion)
-    ),
-  ].sort();
+    ...new Set(registros.map((registro) => registro.nombre_institucion)),
+  ]
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+    <section className="grid grid-cols-1 gap-4 rounded-xl bg-white p-5 shadow-sm md:grid-cols-3">
+      <div>
+        <label
+          htmlFor="filtro-institucion"
+          className="mb-2 block text-sm font-medium text-gray-700"
+        >
+          Institución educativa
+        </label>
 
-      <h3 className="text-xl font-semibold text-[#172B4D]">
-        Filtros de análisis
-      </h3>
+        <select
+          id="filtro-institucion"
+          value={institucion}
+          onChange={(evento) => onInstitucionChange(evento.target.value)}
+          className="w-full rounded-lg border border-gray-300 p-3"
+        >
+          <option value="todas">Todas las instituciones</option>
+          {instituciones.map((nombre) => (
+            <option key={nombre} value={nombre}>
+              {nombre}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <p className="mt-2 text-sm text-gray-500">
-        Selecciona los criterios para visualizar y comparar
-        los resultados de las instituciones educativas.
-      </p>
+      <div>
+        <label
+          htmlFor="filtro-area"
+          className="mb-2 block text-sm font-medium text-gray-700"
+        >
+          Área de conocimiento
+        </label>
 
-      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <select
+          id="filtro-area"
+          value={area}
+          onChange={(evento) =>
+            onAreaChange(evento.target.value as AreaSaber11)
+          }
+          className="w-full rounded-lg border border-gray-300 p-3"
+        >
+          <option value="lectura_critica">Lectura crítica</option>
+          <option value="matematicas">Matemáticas</option>
+          <option value="ciencias_sociales">Ciencias sociales</option>
+          <option value="ciencias_naturales">Ciencias naturales</option>
+          <option value="ingles">Inglés</option>
+        </select>
+      </div>
 
-        {/* Filtro por institución educativa */}
-        <div>
-          <label
-            htmlFor="institucion"
-            className="mb-2 block text-sm font-semibold text-[#172B4D]"
-          >
-            Institución educativa
-          </label>
+      <div>
+        <label
+          htmlFor="filtro-grafica"
+          className="mb-2 block text-sm font-medium text-gray-700"
+        >
+          Tipo de gráfica
+        </label>
 
-          <select
-            id="institucion"
-            value={institucion}
-            onChange={(e) => onInstitucionChange(e.target.value)}
-            className="w-full rounded-lg border border-gray-300
-                       bg-white px-3 py-3 text-sm text-gray-700"
-          >
-            <option value="todas">Todas las instituciones</option>
-
-            {instituciones.map((nombre) => (
-              <option key={nombre} value={nombre}>
-                {nombre}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Filtro por área evaluada */}
-        <div>
-          <label
-            htmlFor="area"
-            className="mb-2 block text-sm font-semibold text-[#172B4D]"
-          >
-            Área evaluada
-          </label>
-
-          <select
-            id="area"
-            value={area}
-            onChange={(e) =>
-              onAreaChange(e.target.value as AreaSaber11)
-            }
-            className="w-full rounded-lg border border-gray-300
-                       bg-white px-3 py-3 text-sm text-gray-700"
-          >
-            <option value="lectura_critica">Lectura crítica</option>
-            <option value="matematicas">Matemáticas</option>
-            <option value="ciencias_sociales">Sociales y Ciudadanas</option>
-            <option value="ciencias_naturales">Ciencias Naturales</option>
-            <option value="ingles">Inglés</option>
-          </select>
-        </div>
-
-        {/* Filtro por tipo de gráfica */}
-        <div>
-          <label
-            htmlFor="tipoGrafica"
-            className="mb-2 block text-sm font-semibold text-[#172B4D]"
-          >
-            Tipo de análisis
-          </label>
-
-          <select
-            id="tipoGrafica"
-            value={tipoGrafica}
-            onChange={(e) =>
-              onTipoGraficaChange(e.target.value as TipoGrafica)
-            }
-            className="w-full rounded-lg border border-gray-300
-                       bg-white px-3 py-3 text-sm text-gray-700"
-          >
-            <option value="promedios">Promedios por área</option>
-            <option value="comparacion">Comparación entre instituciones</option>
-            <option value="ranking">Ranking por área</option>
-          </select>
-        </div>
-
+        <select
+          id="filtro-grafica"
+          value={tipoGrafica}
+          onChange={(evento) =>
+            onTipoGraficaChange(evento.target.value as TipoGrafica)
+          }
+          className="w-full rounded-lg border border-gray-300 p-3"
+        >
+          <option value="promedios">Promedios por área</option>
+          <option value="comparacion">Comparación de instituciones</option>
+          <option value="ranking">Ranking de instituciones</option>
+          <option value="mapa_calor">Mapa de calor</option>
+          <option value="circular">Gráfica circular</option>
+          <option value="evolucion">Evolución por año</option>
+          <option value="caja_bigotes">Caja y bigotes</option>
+        </select>
       </div>
     </section>
   );

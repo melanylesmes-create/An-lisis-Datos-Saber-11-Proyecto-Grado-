@@ -5,135 +5,136 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import ResultadoRealSaber11
-from .graficas import (grafica_promedio_areas, grafica_comparacion_instituciones,grafica_ranking_instituciones,)
+from .graficas import (
+    grafica_promedio_areas,
+    grafica_comparacion_instituciones,
+    grafica_ranking_instituciones,
+    grafica_mapa_calor_instituciones,
+    grafica_circular_areas,
+    grafica_evolucion_anual,
+    grafica_caja_bigotes,
+)
 
 
-# Consulta los resultados guardados en PostgreSQL
 @require_GET
 def mostrar_resultados_view(request):
-
-    # Obtenemos resultados, instituciones y cargas
-    # en una misma consulta para mejorar el rendimiento
+    # Consulta los resultados guardados y devuelve los campos necesarios.
     resultados = ResultadoRealSaber11.objects.select_related(
-        "id_institucion", "id_carga"
+        "institucion"
     ).all()
 
-    data = [
-        {
-            "id_resultado_real": r.id_resultado_real,
-            "anio": r.anio,
-            "puntaje_global": r.puntaje_global,
-            "lectura_critica": r.lectura_critica,
-            "matematicas": r.matematicas,
-            "sociales_ciudadanas": r.sociales_ciudadanas,
-            "ciencias_naturales": r.ciencias_naturales,
-            "ingles": r.ingles,
-            "institucion": r.id_institucion.nombre,
-            "municipio": r.id_institucion.municipio,
-            "archivo_origen": r.id_carga.nombre_archivo,
-        }
-        for r in resultados
-    ]
+    datos = []
 
-    return JsonResponse({"resultados": data})
+    for resultado in resultados:
+        datos.append({
+            "id_resultado_real": resultado.id_resultado_real,
+            "anio": resultado.anio,
+            "puntaje_global": resultado.puntaje_global,
+            "lectura_critica": resultado.lectura_critica,
+            "matematicas": resultado.matematicas,
+            "sociales_ciudadanas": resultado.sociales_ciudadanas,
+            "ciencias_naturales": resultado.ciencias_naturales,
+            "ingles": resultado.ingles,
+            "institucion": str(resultado.institucion),
+            "municipio": resultado.municipio,
+            "archivo_origen": str(resultado.archivo_origen),
+        })
+
+    return JsonResponse({"resultados": datos})
 
 
-# Genera una gráfica a partir de los datos del ETL
+def responder_grafica(funcion, datos, area=None):
+    # Ejecuta la función gráfica y devuelve el PNG o un mensaje de error.
+    try:
+        imagen = funcion(datos, area) if area is not None else funcion(datos)
+        return HttpResponse(imagen, content_type="image/png")
+    except (ValueError, TypeError, KeyError) as error:
+        return JsonResponse({"error": str(error)}, status=400)
+    except Exception:
+        # Evita enviar detalles internos del servidor al navegador.
+        return JsonResponse(
+            {"error": "Ocurrió un error al generar la gráfica."},
+            status=500,
+        )
+
+
+def obtener_registros(request):
+    # Lee y valida los registros enviados desde React.
+    try:
+        cuerpo = json.loads(request.body)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        raise ValueError("El cuerpo de la solicitud no contiene JSON válido.")
+
+    registros = cuerpo.get("registros")
+
+    if not isinstance(registros, list) or not registros:
+        raise ValueError("Debes enviar una lista de registros no vacía.")
+
+    return registros, cuerpo.get("area")
+
+
+def procesar_grafica(request, funcion, necesita_area=False):
+    # Centraliza la lectura de datos y la generación de las gráficas.
+    try:
+        registros, area = obtener_registros(request)
+
+        if necesita_area and not area:
+            return JsonResponse(
+                {"error": "Debes seleccionar un área."},
+                status=400,
+            )
+
+        return responder_grafica(funcion, registros, area if necesita_area else None)
+
+    except ValueError as error:
+        return JsonResponse({"error": str(error)}, status=400)
+
+
 @require_POST
 def generar_grafica_areas(request):
+    # Genera la gráfica de promedios por área.
+    return procesar_grafica(request, grafica_promedio_areas)
 
-    try:
-        # Recibimos los registros enviados desde React
-        contenido = json.loads(request.body)
-        registros = contenido.get("registros", [])
 
-        # Validamos que existan registros
-        if not isinstance(registros, list) or not registros:
-            return JsonResponse({
-                "error": "No hay registros para generar la gráfica."
-            }, status=400)
-
-        # Generamos la imagen utilizando Pandas y Matplotlib
-        imagen = grafica_promedio_areas(registros)
-
-        # Enviamos la gráfica PNG a React
-        return HttpResponse(
-            imagen,
-            content_type="image/png"
-        )
-
-    except (ValueError, TypeError, KeyError) as error:
-        return JsonResponse({
-            "error": str(error)
-        }, status=400)
-
-    
 @require_POST
 def generar_grafica_comparacion(request):
-    try:
-        # Recibimos los datos enviados desde React
-        datos = json.loads(request.body)
-
-        registros = datos.get("registros", [])
-        area = datos.get("area", "matematicas")
-
-        # Validamos los registros
-        if not isinstance(registros, list) or not registros:
-            return JsonResponse(
-                {"error": "No hay registros para comparar."},
-                status=400
-            )
-
-        # Generamos la gráfica utilizando Matplotlib
-        imagen = grafica_comparacion_instituciones(
-            registros,
-            area
-        )
-
-        # Devolvemos la imagen a React
-        return HttpResponse(
-            imagen,
-            content_type="image/png"
-        )
-
-    except (ValueError, KeyError, TypeError) as error:
-        return JsonResponse(
-            {"error": str(error)},
-            status=400
-        )
+    # Genera la comparación de instituciones para el área seleccionada.
+    return procesar_grafica(
+        request, grafica_comparacion_instituciones, necesita_area=True
+    )
 
 
-# Generar ranking de instituciones por área
 @require_POST
 def generar_grafica_ranking(request):
-    try:
-        # Recibimos la información enviada desde React
-        datos = json.loads(request.body)
+    # Genera el ranking de instituciones para el área seleccionada.
+    return procesar_grafica(
+        request, grafica_ranking_instituciones, necesita_area=True
+    )
 
-        registros = datos.get("registros", [])
-        area = datos.get("area", "matematicas")
 
-        # Validamos que existan registros
-        if not isinstance(registros, list) or not registros:
-            return JsonResponse(
-                {"error": "No hay registros para generar el ranking."},
-                status=400
-            )
+@require_POST
+def generar_grafica_mapa_calor(request):
+    # Genera el mapa de calor de promedios institucionales.
+    return procesar_grafica(request, grafica_mapa_calor_instituciones)
 
-        # Generamos el ranking utilizando Pandas y Matplotlib
-        imagen = grafica_ranking_instituciones(
-            registros,
-            area
-        )
 
-        # Devolvemos la gráfica como imagen PNG
-        return HttpResponse(
-            imagen,
-            content_type="image/png"
-        )
+@require_POST
+def generar_grafica_circular(request):
+    # Genera la gráfica circular de promedios por área.
+    return procesar_grafica(request, grafica_circular_areas)
 
-    except (ValueError, KeyError, TypeError) as error:
-        return JsonResponse(
-            {"error": str(error)},
-            status=400
-        )
+
+@require_POST
+def generar_grafica_evolucion(request):
+    # Genera la evolución anual para el área seleccionada.
+    return procesar_grafica(
+        request, grafica_evolucion_anual, necesita_area=True
+    )
+
+
+@require_POST
+def generar_grafica_caja_bigotes(request):
+    # Genera el diagrama de caja y bigotes para el área seleccionada.
+    return procesar_grafica(
+        request, grafica_caja_bigotes, necesita_area=True
+    )
