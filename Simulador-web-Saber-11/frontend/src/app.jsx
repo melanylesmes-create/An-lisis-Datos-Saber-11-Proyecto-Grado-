@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Inicio from "./pages/Inicio.jsx";
 import Login from "./pages/Login.jsx";
 import Pruebas from "./pages/Pruebas.jsx";
+import Api from "./pages/Api.jsx";
 
 const MENU = [
   { id: "inicio", texto: "Inicio" },
   { id: "pruebas", texto: "Simulacro web" },
   { id: "login", texto: "Iniciar sesión" },
+  { id: "api", texto: "Generar pregunta IA" },
 ];
 
 export default function App() {
@@ -44,6 +46,7 @@ export default function App() {
       <main className="contenido">
         {pagina === "inicio" && <Inicio irA={setPagina} />}
         {pagina === "pruebas" && <Pruebas />}
+        {pagina === "api" && <Api />}
         {pagina === "login" && (
           <Login
             onLogin={(u) => {
