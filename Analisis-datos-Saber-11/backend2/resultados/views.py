@@ -20,24 +20,33 @@ from .graficas import (
 def mostrar_resultados_view(request):
     # Consulta los resultados guardados y devuelve los campos necesarios.
     resultados = ResultadoRealSaber11.objects.select_related(
-        "institucion"
+        "id_institucion"
     ).all()
 
     datos = []
 
     for resultado in resultados:
+        institucion = resultado.id_institucion
+
         datos.append({
             "id_resultado_real": resultado.id_resultado_real,
+            "codigo_icfes": institucion.codigo_dane,
+            "codigo_dane": institucion.codigo_dane,
+            "nombre_institucion": institucion.nombre,
+            "ciudad": institucion.municipio,
+            "estado_dane": (
+                "Falta código DANE"
+                if not institucion.codigo_dane
+                else "Pendiente de verificar"
+            ),
             "anio": resultado.anio,
+            "periodo": resultado.periodo,
             "puntaje_global": resultado.puntaje_global,
             "lectura_critica": resultado.lectura_critica,
             "matematicas": resultado.matematicas,
-            "sociales_ciudadanas": resultado.sociales_ciudadanas,
+            "ciencias_sociales": resultado.sociales_ciudadanas,
             "ciencias_naturales": resultado.ciencias_naturales,
             "ingles": resultado.ingles,
-            "institucion": str(resultado.institucion),
-            "municipio": resultado.municipio,
-            "archivo_origen": str(resultado.archivo_origen),
         })
 
     return JsonResponse({"resultados": datos})
