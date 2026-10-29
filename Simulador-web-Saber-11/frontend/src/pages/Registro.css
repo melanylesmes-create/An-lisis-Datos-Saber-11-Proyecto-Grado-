@@ -1,0 +1,141 @@
+
+.registro-contenedor {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 16px;
+  background: #f3f6fb;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.registro-caja {
+  width: 100%;
+  max-width: 520px;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.registro-caja h1 {
+  margin: 0 0 10px;
+  color: #17365d;
+  text-align: center;
+  font-size: 28px;
+}
+
+.registro-descripcion {
+  margin-bottom: 26px;
+  color: #667085;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.registro-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.registro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 17px;
+}
+
+.registro-campo label {
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.registro-campo input,
+.registro-campo select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #101828;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.registro-campo input:focus,
+.registro-campo select:focus {
+  outline: none;
+  border-color: #3976c5;
+  box-shadow: 0 0 0 3px rgba(57, 118, 197, 0.12);
+}
+
+.registro-boton {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  background: #245ca6;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.registro-boton:hover {
+  background: #194a8a;
+}
+
+.registro-boton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.registro-error,
+.registro-exito {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.registro-error {
+  background: #fff0f0;
+  color: #b42318;
+}
+
+.registro-exito {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.registro-pie {
+  margin: 22px 0 0;
+  text-align: center;
+  color: #667085;
+  font-size: 14px;
+}
+
+.registro-enlace {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #245ca6;
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .registro-caja {
+    padding: 24px 18px;
+  }
+
+  .registro-fila {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

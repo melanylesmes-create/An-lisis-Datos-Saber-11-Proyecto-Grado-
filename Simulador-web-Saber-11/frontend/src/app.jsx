@@ -1,13 +1,16 @@
+
 import React, { useState } from "react";
 import Inicio from "./pages/Inicio.jsx";
 import Login from "./pages/Login.jsx";
 import Pruebas from "./pages/Pruebas.jsx";
 import Api from "./pages/Api.jsx";
+import Registro from "./pages/Registro.jsx";
 
 const MENU = [
   { id: "inicio", texto: "Inicio" },
   { id: "pruebas", texto: "Simulacro web" },
   { id: "login", texto: "Iniciar sesión" },
+  { id: "registro", texto: "Registrarse" },
   { id: "api", texto: "Generar pregunta IA" },
 ];
 
@@ -36,8 +39,16 @@ export default function App() {
             {m.texto}
           </button>
         ))}
+
         {usuario && (
-          <button type="button" className="nav-btn salir" onClick={() => setUsuario(null)}>
+          <button
+            type="button"
+            className="nav-btn salir"
+            onClick={() => {
+              setUsuario(null);
+              setPagina("inicio");
+            }}
+          >
             Salir ({usuario.nombre})
           </button>
         )}
@@ -45,14 +56,23 @@ export default function App() {
 
       <main className="contenido">
         {pagina === "inicio" && <Inicio irA={setPagina} />}
+
         {pagina === "pruebas" && <Pruebas />}
+
         {pagina === "api" && <Api />}
+
         {pagina === "login" && (
           <Login
             onLogin={(u) => {
               setUsuario(u);
               setPagina("inicio");
             }}
+          />
+        )}
+
+        {pagina === "registro" && (
+          <Registro
+            onVolverLogin={() => setPagina("login")}
           />
         )}
       </main>
