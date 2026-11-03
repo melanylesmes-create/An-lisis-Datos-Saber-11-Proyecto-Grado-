@@ -2,9 +2,10 @@ import { useState } from "react";
 import "../styles/InicioSesion.css";
 import EncabezadoInstitucional from "../components/EncabezadoInstitucional";
 import IconoSeguridad from "../components/IconoSeguridad";
+import type { Usuario } from "../types/usuario";
 
 interface InicioSesionProps {
-  onLoginExitoso: () => void;
+  onLoginExitoso: (usuario: Usuario) => void;
 }
 
 export default function InicioSesion({onLoginExitoso}:InicioSesionProps) {
@@ -21,6 +22,7 @@ export default function InicioSesion({onLoginExitoso}:InicioSesionProps) {
         "http://localhost:8000/api/iniciar/",
         {
             method: "POST",
+            credentials: "include",
             headers: {
             "Content-Type": "application/json",
             },
@@ -34,11 +36,9 @@ export default function InicioSesion({onLoginExitoso}:InicioSesionProps) {
         // Convertimos la respuesta de Django a JSON
         const datos = await respuesta.json();
 
-        console.log(datos);
-
         // Verificamos si Django aceptó las credenciales
-        if (respuesta.ok) {
-        onLoginExitoso();
+        if (respuesta.ok && datos.usuario) {
+        onLoginExitoso(datos.usuario as Usuario);
         } else {
         alert(datos.error || datos.mensaje || "Identificación o contraseña incorrecta.");
         }

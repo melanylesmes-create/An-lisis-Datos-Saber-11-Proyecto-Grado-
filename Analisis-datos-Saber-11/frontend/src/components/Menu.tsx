@@ -1,16 +1,20 @@
 
+import type { SeccionMenu } from "../types/navegacion";
+import type { Rol } from "../types/usuario";
+
 // las propiedades que recibe el componente
 interface MenuProps {
 
   // Indica cuál sección está seleccionada actualmente.
-  // Solo permite estos tres valores.
-  seccionActiva: "resultados" | "simulacros" | "perfil";
+  seccionActiva: SeccionMenu;
+
+  // Rol del usuario autenticado. Determina qué opciones ve.
+  rol: Rol;
+
   // Función que se ejecuta cuando el usuario selecciona
   // una opción del menú.
   // Recibe el nombre de la sección seleccionada.
-  onSeleccionar: (
-    seccion: "resultados" | "simulacros" | "perfil"
-  ) => void;
+  onSeleccionar: (seccion: SeccionMenu) => void;
 
   // Función que se ejecutará al pulsar "Cerrar sesión".
   // No recibe parámetros y no devuelve ningún valor.
@@ -19,27 +23,38 @@ interface MenuProps {
 
 
 // 2. Creamos y exportamos el componente de React
-export default function Menu({seccionActiva,onSeleccionar,onCerrarSesion,}: MenuProps) {
+export default function Menu({seccionActiva,rol,onSeleccionar,onCerrarSesion,}: MenuProps) {
 
-  // 3. Definimos las opciones del menú.
-  // Cada opción tiene un identificador y un nombre.
-  const opciones = [
+  // 3. Definimos las opciones del menú y los roles autorizados.
+  // Cada opción tiene un identificador, un nombre y los roles
+  // que pueden acceder a ella.
+  const opciones: { id: SeccionMenu; nombre: string; roles: Rol[] }[] = [
     {
       id: "resultados",
       nombre: "Resultados Saber 11",
+      roles: ["funcionario"],
     },
     {
       id: "simulacros",
       nombre: "Simulacros",
+      roles: ["funcionario"],
+    },
+    {
+      id: "usuarios",
+      nombre: "Gestionar usuarios",
+      roles: ["administrador"],
     },
     {
       id: "perfil",
       nombre: "Mi perfil",
+      roles: ["funcionario", "administrador"],
     },
-  ] as const;
+  ];
 
-  // "as const" permite conservar los valores exactos
-  // de los identificadores en TypeScript.
+  // Solo mostramos las secciones permitidas para el rol actual.
+  const opcionesVisibles = opciones.filter((opcion) =>
+    opcion.roles.includes(rol)
+  );
 
 
   // 4. Retornamos los elementos visuales del menú
@@ -76,8 +91,8 @@ export default function Menu({seccionActiva,onSeleccionar,onCerrarSesion,}: Menu
         className="space-y-2"
       >
 
-        {/* Recorremos las opciones utilizando map() */}
-        {opciones.map((opcion) => (
+        {/* Recorremos las opciones visibles utilizando map() */}
+        {opcionesVisibles.map((opcion) => (
 
           // Creamos un botón por cada opción.
           <button

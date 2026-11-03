@@ -4,6 +4,8 @@ import json
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET, require_POST
 
+from inicioSesion.permisos import ROLES_CONSULTA, roles_requeridos
+
 from .models import ResultadoRealSaber11
 from .graficas import (
     grafica_promedio_areas,
@@ -16,6 +18,7 @@ from .graficas import (
 )
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_GET
 def mostrar_resultados_view(request):
     # Consulta los resultados guardados y devuelve los campos necesarios.
@@ -99,12 +102,14 @@ def procesar_grafica(request, funcion, necesita_area=False):
         return JsonResponse({"error": str(error)}, status=400)
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_areas(request):
     # Genera la gráfica de promedios por área.
     return procesar_grafica(request, grafica_promedio_areas)
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_comparacion(request):
     # Genera la comparación de instituciones para el área seleccionada.
@@ -113,6 +118,7 @@ def generar_grafica_comparacion(request):
     )
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_ranking(request):
     # Genera el ranking de instituciones para el área seleccionada.
@@ -121,18 +127,21 @@ def generar_grafica_ranking(request):
     )
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_mapa_calor(request):
     # Genera el mapa de calor de promedios institucionales.
     return procesar_grafica(request, grafica_mapa_calor_instituciones)
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_circular(request):
     # Genera la gráfica circular de promedios por área.
     return procesar_grafica(request, grafica_circular_areas)
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_evolucion(request):
     # Genera la evolución anual para el área seleccionada.
@@ -141,6 +150,7 @@ def generar_grafica_evolucion(request):
     )
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def generar_grafica_caja_bigotes(request):
     # Genera el diagrama de caja y bigotes para el área seleccionada.

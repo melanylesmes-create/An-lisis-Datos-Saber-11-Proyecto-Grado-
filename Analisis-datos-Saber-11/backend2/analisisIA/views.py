@@ -5,10 +5,13 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
+from inicioSesion.permisos import ROLES_CONSULTA, roles_requeridos
+
 from .procesarDatos import calcular_promedios
 from .ollamaService import analizar_resultados
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def analizar_resultados_view(request):
     try:

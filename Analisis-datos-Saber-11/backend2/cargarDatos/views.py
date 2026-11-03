@@ -6,7 +6,10 @@ import pandas as pd
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET
 
+from inicioSesion.permisos import ROLES_CARGA, roles_requeridos
+
 # Recibe el archivo desde React y ejecuta el ETL.
+@roles_requeridos(*ROLES_CARGA)
 @require_POST
 def subir_archivo_view(request):
 
