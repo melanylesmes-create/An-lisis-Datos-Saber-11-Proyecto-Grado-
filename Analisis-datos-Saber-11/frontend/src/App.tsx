@@ -15,7 +15,6 @@ import { useSubirArchivo } from "./hooks/useSubirArchivo";
 
 // Secciones principales del menú
 type SeccionMenu = "resultados" | "simulacros" | "perfil";
-
 // Pantallas del módulo de resultados reales
 type PaginaResultados = "cargar" | "graficas";
 
@@ -25,12 +24,10 @@ function App() {
   const [sesionIniciada, setSesionIniciada] = useState(false);
 
   // Guarda la sección seleccionada en el menú lateral
-  const [seccionActiva, setSeccionActiva] =
-    useState<SeccionMenu>("resultados");
+  const [seccionActiva, setSeccionActiva] = useState<SeccionMenu>("resultados");
 
   // Controla si mostramos la carga o las gráficas
-  const [paginaActual, setPaginaActual] =
-    useState<PaginaResultados>("cargar");
+  const [paginaActual, setPaginaActual] = useState<PaginaResultados>("cargar");
 
   // Datos y funciones del procesamiento ETL
   const {

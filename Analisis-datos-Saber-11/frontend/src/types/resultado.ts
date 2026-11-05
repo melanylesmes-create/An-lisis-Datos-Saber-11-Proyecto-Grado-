@@ -39,4 +39,4 @@ export interface RespuestaETL {
   total_errores: number;
   registros: ResultadoSaber11[];
   guardado: boolean;
-}
+} 
