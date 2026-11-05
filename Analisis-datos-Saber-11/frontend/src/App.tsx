@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Páginas de la aplicación
 import InicioSesion from "./pages/InicioSesion";
 import CargarDatosPage from "./pages/CargarDatosPage";
 import VisualizarGraficasPage from "./pages/VisualizarGraficasPage";
+import GestionUsuariosPage from "./pages/GestionUsuariosPage";
 
 // Componentes compartidos
 import EncabezadoInstitucional from "./components/EncabezadoInstitucional";
@@ -13,15 +14,25 @@ import MenuLateral from "./components/Menu";
 // Hook para procesar archivos
 import { useSubirArchivo } from "./hooks/useSubirArchivo";
 
-// Secciones principales del menú
-type SeccionMenu = "resultados" | "simulacros" | "perfil";
+// Tipos de navegación y usuario
+import type { SeccionMenu } from "./types/navegacion";
+import type { Usuario } from "./types/usuario";
+
 // Pantallas del módulo de resultados reales
 type PaginaResultados = "cargar" | "graficas";
 
+// Sección inicial según el rol del usuario.
+function seccionInicial(usuario: Usuario): SeccionMenu {
+  return usuario.rol === "administrador" ? "usuarios" : "resultados";
+}
+
 function App() {
 
-  // Indica si el usuario ha iniciado sesión
-  const [sesionIniciada, setSesionIniciada] = useState(false);
+  // Usuario autenticado y su rol
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+
+  // Indica si estamos comprobando la sesión al cargar la página
+  const [verificandoSesion, setVerificandoSesion] = useState(true);
 
   // Guarda la sección seleccionada en el menú lateral
   const [seccionActiva, setSeccionActiva] = useState<SeccionMenu>("resultados");
@@ -37,25 +48,74 @@ function App() {
     subirArchivo,
   } = useSubirArchivo();
 
+  // Al cargar la aplicación, restauramos la sesión desde Django.
+  useEffect(() => {
+    const restaurarSesion = async () => {
+      try {
+        const respuesta = await fetch(
+          "http://localhost:8000/api/sesion/",
+          { credentials: "include" }
+        );
+
+        if (!respuesta.ok) return;
+
+        const datos = await respuesta.json();
+
+        if (datos.autenticado && datos.usuario) {
+          const usuarioSesion = datos.usuario as Usuario;
+          setUsuario(usuarioSesion);
+          setSeccionActiva(seccionInicial(usuarioSesion));
+        }
+      } catch {
+        // Si el backend no responde, se mantiene la pantalla de login.
+      } finally {
+        setVerificandoSesion(false);
+      }
+    };
+
+    restaurarSesion();
+  }, []);
+
+  // Guarda el usuario cuando el login es exitoso.
+  const iniciarSesion = (usuarioAutenticado: Usuario) => {
+    setUsuario(usuarioAutenticado);
+    setSeccionActiva(seccionInicial(usuarioAutenticado));
+    setPaginaActual("cargar");
+  };
+
   // Cambia la sección seleccionada
   const seleccionarSeccion = (seccion: SeccionMenu) => {
     setSeccionActiva(seccion);
   };
 
-  // Regresa al inicio de sesión y reinicia la navegación
-  const cerrarSesion = () => {
-    setSesionIniciada(false);
-    setSeccionActiva("resultados");
-    setPaginaActual("cargar");
+  // Cierra la sesión en Django y regresa al login.
+  const cerrarSesion = async () => {
+    try {
+      await fetch("http://localhost:8000/api/cerrar/", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Aunque falle la petición, limpiamos el estado local.
+    } finally {
+      setUsuario(null);
+      setSeccionActiva("resultados");
+      setPaginaActual("cargar");
+    }
   };
 
-  // Si no existe una sesión iniciada, mostramos el login
-  if (!sesionIniciada) {
+  // Mientras comprobamos la sesión mostramos un mensaje breve.
+  if (verificandoSesion) {
     return (
-      <InicioSesion
-        onLoginExitoso={() => setSesionIniciada(true)}
-      />
+      <div className="flex min-h-screen items-center justify-center bg-[#F4F6F9]">
+        <p className="text-gray-500">Comprobando sesión...</p>
+      </div>
     );
+  }
+
+  // Si no existe una sesión iniciada, mostramos el login
+  if (!usuario) {
+    return <InicioSesion onLoginExitoso={iniciarSesion} />;
   }
 
   // Estructura principal de la plataforma
@@ -68,9 +128,10 @@ function App() {
       {/* Distribución: menú lateral + contenido */}
       <div className="flex min-h-screen flex-col lg:flex-row">
 
-        {/* Menú lateral */}
+        {/* Menú lateral filtrado según el rol */}
         <MenuLateral
           seccionActiva={seccionActiva}
+          rol={usuario.rol}
           onSeleccionar={seleccionarSeccion}
           onCerrarSesion={cerrarSesion}
         />
@@ -78,8 +139,8 @@ function App() {
         {/* Área donde se muestran las páginas */}
         <main className="min-w-0 flex-1">
 
-          {/* Resultados reales Saber 11 */}
-          {seccionActiva === "resultados" && (
+          {/* Resultados reales Saber 11 (solo funcionario) */}
+          {seccionActiva === "resultados" && usuario.rol === "funcionario" && (
             paginaActual === "graficas" ? (
 
               <VisualizarGraficasPage
@@ -100,8 +161,8 @@ function App() {
             )
           )}
 
-          {/* Sección de simulacros */}
-          {seccionActiva === "simulacros" && (
+          {/* Sección de simulacros (solo funcionario) */}
+          {seccionActiva === "simulacros" && usuario.rol === "funcionario" && (
             <section className="m-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
               <h1 className="text-2xl font-bold text-[#102A5E]">
                 Simulacros
@@ -113,7 +174,12 @@ function App() {
             </section>
           )}
 
-          {/* Sección de perfil */}
+          {/* Gestión de usuarios (solo administrador) */}
+          {seccionActiva === "usuarios" && usuario.rol === "administrador" && (
+            <GestionUsuariosPage usuarioActual={usuario} />
+          )}
+
+          {/* Sección de perfil (ambos roles) */}
           {seccionActiva === "perfil" && (
             <section className="m-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
               <h1 className="text-2xl font-bold text-[#102A5E]">
@@ -121,7 +187,15 @@ function App() {
               </h1>
 
               <p className="mt-3 text-gray-500">
-                Aquí se mostrará la información del usuario.
+                {usuario.nombre} {usuario.apellido}
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Rol: {usuario.rol}
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Correo: {usuario.correo}
               </p>
             </section>
           )}

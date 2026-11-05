@@ -104,7 +104,15 @@ export default function GraficaMapaCalor({
     if (registros.length > 0) {
       obtenerGrafica();
     } else {
-      setError("No hay registros disponibles para generar el mapa de calor.");
+      const temporizador = setTimeout(
+        () =>
+          setError(
+            "No hay registros disponibles para generar el mapa de calor."
+          ),
+        0
+      );
+
+      return () => clearTimeout(temporizador);
     }
 
     // Cancela solicitudes y libera la imagen al desmontar o actualizar

@@ -24,8 +24,8 @@ export default function GraficasResultados({
 
     // Evitamos generar una gráfica sin registros
     if (registros.length === 0) {
-      setImagen(null);
-      return;
+      const temporizador = setTimeout(() => setImagen(null), 0);
+      return () => clearTimeout(temporizador);
     }
 
     let cancelado = false;

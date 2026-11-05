@@ -5,6 +5,8 @@ from io import BytesIO
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 
+from inicioSesion.permisos import ROLES_CONSULTA, roles_requeridos
+
 # Función creada por tu compañera para generar PDF
 from .crear_pdf import generar_pdf
 
@@ -17,6 +19,7 @@ from resultados.graficas import (
 
 
 
+@roles_requeridos(*ROLES_CONSULTA)
 @require_GET
 def exportar_pdf_view(request):
     # Obtener filtros opcionales desde la URL
@@ -60,6 +63,7 @@ def exportar_pdf_view(request):
         )
 
     
+@roles_requeridos(*ROLES_CONSULTA)
 @require_POST
 def exportar_pdf_completo_view(request):
     try:
