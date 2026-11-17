@@ -1,4 +1,4 @@
-
+import {Routes, Route, Navigate, useNavigate, useLocation} from "react-router-dom";
 import { useEffect, useState } from "react";
 
 // Páginas de la aplicación
@@ -27,7 +27,8 @@ function seccionInicial(usuario: Usuario): SeccionMenu {
 }
 
 function App() {
-
+  const navigate = useNavigate();
+  const location = useLocation();
   // Usuario autenticado y su rol
   const [usuario, setUsuario] = useState<Usuario | null>(null);
 
@@ -78,10 +79,14 @@ function App() {
 
   // Guarda el usuario cuando el login es exitoso.
   const iniciarSesion = (usuarioAutenticado: Usuario) => {
-    setUsuario(usuarioAutenticado);
-    setSeccionActiva(seccionInicial(usuarioAutenticado));
-    setPaginaActual("cargar");
-  };
+  setUsuario(usuarioAutenticado);
+  setSeccionActiva(seccionInicial(usuarioAutenticado));
+  setPaginaActual("cargar");
+
+  navigate(usuarioAutenticado.rol === "administrador" ? "/usuarios" : "/analisis",
+    { replace: true }
+  );
+};
 
   // Cambia la sección seleccionada
   const seleccionarSeccion = (seccion: SeccionMenu) => {
@@ -101,6 +106,7 @@ function App() {
       setUsuario(null);
       setSeccionActiva("resultados");
       setPaginaActual("cargar");
+      navigate("/iniciar-sesion", { replace: true });
     }
   };
 
@@ -113,11 +119,37 @@ function App() {
     );
   }
 
-  // Si no existe una sesión iniciada, mostramos el login
-  if (!usuario) {
-    return <InicioSesion onLoginExitoso={iniciarSesion} />;
-  }
 
+  const rutaInicial =
+  usuario?.rol === "administrador"
+    ? "/usuarios"
+    : "/analisis";
+
+const accesoPermitido =
+  location.pathname === "/analisis"
+    ? usuario?.rol === "funcionario"
+    : location.pathname === "/usuarios"
+      ? usuario?.rol === "administrador"
+      : false;
+
+
+  if (location.pathname === "/") {
+  return <Navigate to={usuario ? rutaInicial : "/iniciar-sesion"} replace />;
+}
+
+if (location.pathname === "/iniciar-sesion") {
+  return usuario
+    ? <Navigate to={rutaInicial} replace />
+    : <InicioSesion onLoginExitoso={iniciarSesion} />;
+}
+
+if (!usuario) {
+  return <Navigate to="/iniciar-sesion" replace />;
+}
+
+if (!accesoPermitido) {
+  return <Navigate to={rutaInicial} replace />;
+}
   // Estructura principal de la plataforma
   return (
     <div className="min-h-screen bg-[#F4F6F9]">
