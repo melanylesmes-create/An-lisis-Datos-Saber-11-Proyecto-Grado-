@@ -3,12 +3,24 @@ import "../styles/InicioSesion.css"
 
 export default function InicioSesion() {
     // Guarda la identificación escrita por el usuario
-    const [identificacion, setIdentificacion] = useState(" ")
+    const [identificacion, setIdentificacion] = useState("")
     // Guarda la contraseña escrita por el usuario
-    const [contrasena, setContrasena] = useState(" ")
+    const [contrasena, setContrasena] = useState("")
 
     // Envía los datos del inicio de sesión al backend
-    const iniciarSesion = async () => { const respuesta = await fetch( "http://localhost:8000/api/iniciar/",
+    const iniciarSesion = async () => { 
+          // Verificar que los campos no estén vacíos
+        if (!identificacion.trim() || !contrasena.trim()) {
+            alert("Complete todos los campos")
+            return
+        }
+
+        // Verificar que la identificación contenga solo números
+        if (!/^\d+$/.test(identificacion)) {
+            alert("El número de identificación debe contener únicamente números")
+            return
+        }
+        const respuesta = await fetch( "http://localhost:8000/api/iniciar/",
         // Indicamos que enviamos información en formato JSON
         {method: "POST", headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ numero_identificacion: identificacion, contrasena: contrasena})
